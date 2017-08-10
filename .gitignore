@@ -1,0 +1,6 @@
+@VSCode
+.vscode/
+
+.yo-rc.json
+.jsbeautifyrc
+node_modules/

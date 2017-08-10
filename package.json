@@ -1,0 +1,16 @@
+{
+  "name": "generator-azure-iot-edge-module",
+  "version": "1.0.0",
+  "description": "Scaffolding tool to help setup Azure IoT Edge module development environment.",
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator", "Azure IoT Edge", "IoT", "Azure"
+  ],
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "yeoman-generator": "^1.1.1",
+    "yosay": "^2.0.1"
+  }
+}
