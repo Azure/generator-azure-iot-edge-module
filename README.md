@@ -1,0 +1,1 @@
+# generator-zure-iot-edge-module
