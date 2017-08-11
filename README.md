@@ -52,9 +52,9 @@ docker run -d -p 5000:5000 --name registry resigtry:2
 ```
 ### Build docker image for your module
 ```
-docker build --build-arg EXE_DIR=./bin/Debug/netcoreapp2/publish -t localhost:5000/<moduleName>:latest .
+docker build --build-arg EXE_DIR=./bin/Debug/netcoreapp2/publish -t localhost:5000/<lower_case_module_name>:latest <docker_file_directory>
 ```
 ### Push the image to local registry
 ```
-docker push localhost:5000/<moduleName>
+docker push localhost:5000/<lower_case_module_name>
 ```
