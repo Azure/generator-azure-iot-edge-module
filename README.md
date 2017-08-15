@@ -14,9 +14,11 @@ If this is the first time you hear about YEOMAN, make sure to take a look at the
 
 - Make sure you have yo installed: npm install -g yo
 
-- Install the generaotr: npm install -g generator-azure-iot-edge-module
+- Set npm registry: npm config set registry https://www.myget.org/F/generator-azure-iot-edge-module/npm/
 
-- Make sure you have [dotnet core](https://www.microsoft.com/net/core) instaled
+- Install the generator: npm install -g generator-azure-iot-edge-module
+
+- Make sure you have [dotnet core](https://www.microsoft.com/net/core) installed
 
 - Run **yo azure-iot-edge-module**
 
@@ -39,7 +41,7 @@ MAC
 
 https://store.docker.com/editions/community/docker-ce-desktop-mac
 
-Now navigate to the genarated module folder in the first place.
+Now navigate to the generated module folder in the first place.
 
 ### Build your module
 ```
