@@ -67,8 +67,8 @@ module.exports = class extends Generator {
       if (answers.test) {
         fs.mkdir(this.destinationPath(answers.name + 'Test'));
       }
-      this.fs.copyTpl(this.templatePath('Project'), this.destinationPath(answers.name + '/' + answers.name + '.csproj'));
-      this.fs.copyTpl(this.templatePath('Program'), this.destinationPath(answers.name + '/Program.cs'), {
+      this.fs.copyTpl(this.templatePath('Project.csproj'), this.destinationPath(answers.name + '/' + answers.name + '.csproj'));
+      this.fs.copyTpl(this.templatePath('Program.cs'), this.destinationPath(answers.name + '/Program.cs'), {
         ModuleName: answers.name
       });
       answers.architectures.forEach((architecture, index) => {
