@@ -1,0 +1,15 @@
+{
+    "modules": {
+        "qisun-node-module": {
+            "name": "qisun-node-module",
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "config": {
+                "image": "localhost:5000/qisun-node-module",
+                "tag": "latest",
+                "env": {}
+            }
+        }
+    }
+}
