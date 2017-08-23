@@ -101,7 +101,7 @@ docker run -d -p 5000:5000 --name registry registry:2
 ```
 
 ### Build docker image for your module
-Update the name:tag (localhost:5000/<lower_case_module_name>) with your module name (lower case). Mark up the image name.
+
 ```
 docker build --build-arg EXE_DIR=./publish -t localhost:5000/<lower_case_module_name>:latest <docker_file_directory>
 ```
@@ -114,12 +114,16 @@ docker push localhost:5000/<lower_case_module_name>
 
 ### Deploy the module
 
-Deployment is accomplished using the edge cli tool. This tool uses Azure IoT Hub to send deployment information to the edge device.
+Deployment is accomplished using the edge cli tool. This tool uses Azure IoT Hub to send deployment information to the edge device. Run the following command 
 
-Update the deployment.json file with the image name marked in previous step. Then run the following command ```
-edge-explorer edge deployment create -m <path to deployment file> -d <edge device ID>```
+```
+edge-explorer edge deployment create -m <path to deployment file> -d <edge device ID>
+```
 
 Now we have the sample module deployed and running, you could monitor it with command 
-```edge-explorer monitor events <deviceID> --login <iothub connection string not device connection string>```
+
+```
+edge-explorer monitor events <deviceID> --login <iothub connection string not device connection string>
+```
 
 There will be regular and continuing temperature message show in the console. If not, go back check if each step accomplished correctly.

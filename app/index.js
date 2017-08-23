@@ -81,7 +81,10 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.templatePath('csharp/Program.cs'), this.destinationPath(answers.name + '/Program.cs'), {
           ModuleName: answers.name
         });
-        this.fs.copyTpl(this.templatePath('csharp/deployment.json', this.destinationPath(answers.name + '/deployment.json')));
+        this.fs.copyTpl(this.templatePath('csharp/deployment.json', this.destinationPath(answers.name + '/deployment.json'), {
+          ModuleName: answers.name,
+          LowerCaseModuleName: answers.name.toLowerCase()
+        }));
 
         answers.architectures.forEach((architecture, index) => {
           this.fs.copyTpl(this.templatePath('csharp/DockerFile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/DockerFile'), {
@@ -94,7 +97,10 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.templatePath('node/package.json'), this.destinationPath(answers.name + '/package.json'), {
           ModuleName: answers.name
         });
-        this.fs.copyTpl(this.templatePath('node/deployment.json', this.destinationPath(answers.name + '/deployment.json')));
+        this.fs.copyTpl(this.templatePath('node/deployment.json'), this.destinationPath(answers.name + '/deployment.json'), {
+          ModuleName: answers.name,
+          LowerCaseModuleName: answers.name.toLowerCase()
+        });
         this.fs.copyTpl(this.templatePath('node/package-lock.json'), this.destinationPath(answers.name + '/package-lock.json'), {
           ModuleName: answers.name
         });

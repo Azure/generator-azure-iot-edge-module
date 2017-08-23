@@ -1,12 +1,12 @@
 {
     "modules": {
-        "qisun-node-module": {
-            "name": "qisun-node-module",
+        "<%= ModuleName %>": {
+            "name": "<%= ModuleName %>",
             "version": "1.0",
             "type": "docker",
             "status": "running",
             "config": {
-                "image": "localhost:5000/qisun-node-module",
+                "image": "localhost:5000/<%= LowerCaseModuleName %>",
                 "tag": "latest",
                 "env": {}
             }
