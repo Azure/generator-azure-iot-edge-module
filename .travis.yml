@@ -1,0 +1,8 @@
+language: node_js
+
+install:
+  - npm config set registry https://www.myget.org/F/generator-azure-iot-edge-module/api/v2
+  - npm publish
+
+script:
+  - npm run tslint
