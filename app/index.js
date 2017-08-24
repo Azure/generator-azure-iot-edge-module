@@ -42,19 +42,19 @@ module.exports = class extends Generator {
         name: 'architectures',
         message: 'Select the architecture(s) you want to support, your choice will help generate the corresponding dockerfile(s).',
         choices: [{
-            name: "Windows-x64"
+            name: "windows-x64"
           },
           {
-            name: "Linux-x64"
+            name: "linux-x64"
           },
           {
-            name: "Windows-x86"
+            name: "windows-x86"
           },
           {
-            name: "Linux-x86"
+            name: "linux-x86"
           },
           {
-            name: "ARM-x86"
+            name: "arm-x86"
           },
         ],
         validate: function (answer) {
@@ -81,10 +81,10 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.templatePath('csharp/Program.cs'), this.destinationPath(answers.name + '/Program.cs'), {
           ModuleName: answers.name
         });
-        this.fs.copyTpl(this.templatePath('csharp/deployment.json', this.destinationPath(answers.name + '/deployment.json'), {
+        this.fs.copyTpl(this.templatePath('csharp/deployment.json'), this.destinationPath(answers.name + '/deployment.json'), {
           ModuleName: answers.name,
           LowerCaseModuleName: answers.name.toLowerCase()
-        }));
+        });
 
         answers.architectures.forEach((architecture, index) => {
           this.fs.copyTpl(this.templatePath('csharp/DockerFile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/DockerFile'), {
