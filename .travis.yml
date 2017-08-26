@@ -1,8 +1,10 @@
 language: node_js
-deploy:
-  provider: npm
-  email: $NPM_EMAIL
-  api_key: $NPM_AUTH_TOKEN
-  skip_cleanup: true
-  on:
-    branch: master
+script:
+- npm config set registry https://www.myget.org/F/generator-azure-iot-edge-module/npm/
+- echo 'npm adduser <<!' >> publish.sh
+- echo -e $NPM_USER >> publish.sh
+- echo -e $NPM_PSW >> publish.sh
+- echo -e $NPM_EMAIL >> publish.sh
+- echo -e '!' >> publish.sh
+- bash publish.sh
+- npm publish
