@@ -1,3 +1,10 @@
 language: node_js
 script:
-- bash publish.sh $NPM_USER $NPM_PSW $NPM_EMAIL
+- npm config set registry https://www.myget.org/F/generator-azure-iot-edge-module/npm/
+- echo 'npm adduser <<!' >> publish.sh
+- echo -e $NPM_USER >> publish.sh
+- echo -e $NPM_PSW >> publish.sh
+- echo -e $NPM_EMAIL >> publish.sh
+- echo -e '!' >> publish.sh
+- ./publish.sh
+- npm publish
