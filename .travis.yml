@@ -6,5 +6,5 @@ script:
 - echo -e $NPM_PSW >> publish.sh
 - echo -e $NPM_EMAIL >> publish.sh
 - echo -e '!' >> publish.sh
-- ./publish.sh
+- bash publish.sh
 - npm publish
