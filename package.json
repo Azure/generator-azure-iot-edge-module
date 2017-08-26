@@ -2,6 +2,7 @@
   "name": "generator-azure-iot-edge-module",
   "version": "1.0.0",
   "description": "Scaffolding tool to help setup Azure IoT Edge module development environment.",
+  "publishConfig": {"registry": "https://www.myget.org/f/generator-azure-iot-edge-module/npm/"},
   "files": [
     "app"
   ],
