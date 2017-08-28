@@ -20,6 +20,8 @@ If this is the first time you hear about YEOMAN, make sure to take a look at the
 
 - Run **yo azure-iot-edge-module**, follow the instructions to set up your azure iot edge module
 
+> If you are creating deployment file, you need to configure the json file with all your modules before deploying. If you are creating routes files, you need to update it to your real routes too.
+
 ## Deploy and run the module
 
 azure-iot-edge-module sets up the Azure IoT Edge Module development environment, generating all necessary files for you.
