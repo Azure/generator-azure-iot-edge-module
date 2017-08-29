@@ -6,11 +6,23 @@
     "app"
   ],
   "keywords": [
-    "yeoman-generator", "Azure IoT Edge", "IoT", "Azure"
+    "yeoman-generator",
+    "Azure IoT Edge",
+    "IoT",
+    "Azure"
   ],
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
     "fs": "0.0.1-security",
     "yeoman-generator": "^1.1.1",
     "yosay": "^2.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.0",
+    "path": "^0.12.7",
+    "yeoman-assert": "^3.0.0",
+    "yeoman-test": "^1.7.0"
   }
 }
