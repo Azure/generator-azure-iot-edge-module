@@ -19,16 +19,22 @@ module.exports = class extends Generator {
         message: "Which one would you like to create?"
       },
       {
-        when: function (props) {
+        when: (props) => {
           return props.moduleType === 'custom module';
         },
         type: 'input',
         name: 'name',
         default: 'AzureIoTEdgeModule',
-        message: 'What\'s the name of your module'
+        message: 'What\'s the name of your module',
+        validate: function (folderName) {
+          if (folderName.match(/^[a-z0-9_-\s]+$/gi) === null) {
+            return 'Please input a valid module name';
+          }
+          return true;
+        }
       },
       {
-        when: function (props) {
+        when: (props) => {
           return props.moduleType === 'custom module';
         },
         type: 'checkbox',
@@ -58,7 +64,7 @@ module.exports = class extends Generator {
         }
       },
       {
-        when: function (props) {
+        when: (props) => {
           return props.moduleType === 'custom module';
         },
         type: 'confirm',
@@ -70,7 +76,7 @@ module.exports = class extends Generator {
         this.log('Creating files...');
         if (answers.test) {
           fs.mkdir(this.destinationPath(answers.name + 'Test'));
-          fs.writeFileSync('test.js','')
+          fs.writeFileSync('test.js', '')
         }
         this.fs.copyTpl(this.templatePath('app.js'), this.destinationPath(answers.name + '/app.js'));
         this.fs.copyTpl(this.templatePath('.npmrc'), this.destinationPath(answers.name + '/.npmrc'));
