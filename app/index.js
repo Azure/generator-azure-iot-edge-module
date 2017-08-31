@@ -89,7 +89,7 @@ module.exports = class extends Generator {
         });
         this.fs.write(this.destinationPath(answers.name + '/.npmrc'), registry);
         answers.architectures.forEach((architecture, index) => {
-          this.fs.copyTpl(this.templatePath('Dockerfile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/Dockerfile'));
+          this.fs.copyTpl(this.templatePath('Docker/' + architecture + '/Dockerfile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/Dockerfile'));
         });
       } else if (answers.moduleType === 'deployment file') {
         this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath('deployment.json'));
