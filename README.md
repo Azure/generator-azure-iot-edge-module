@@ -97,17 +97,6 @@ docker run -d -p 5000:5000 --name registry registry:2
 
 Navigate to the module directory we just created, you could build the module in any architecture as you want, let's take *windows-x64* for example:
 
-- If you are working on csharp module
-
-```
-dotnet build
-dotnet publish -f netcoreapp2.0 -o .\out\windows-x64\
-copy .\Docker\windows-x64\Dockerfile .\out\windows-x64\
-docker build --build-arg EXE_DIR=. -t localhost:5000/<lower_case_module_name>:latest .\out\windows-x64\
-```
-
-- If you are working on nodejs module
-
 ```
 robocopy ./ ./out/windows-x64/ /NODCOPY
 copy .\Docker\windows-x64\Dockerfile .\out\windows-x64\

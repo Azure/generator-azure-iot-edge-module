@@ -1,3 +1,5 @@
+"use strict";
+
 var Generator = require('yeoman-generator');
 var yosay = require('yosay');
 var fs = require('fs');
