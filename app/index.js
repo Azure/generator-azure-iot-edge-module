@@ -11,7 +11,7 @@ module.exports = class extends Generator {
 
   prompting() {
     this.log(yosay('Hey You\r\nWelcome to Azure IoT Edge Module Generator'));
-
+    let registry = "http://edgenpm.southcentralus.cloudapp.azure.com/";
     return this.prompt([{
         type: 'list',
         name: 'moduleType',
@@ -81,13 +81,13 @@ module.exports = class extends Generator {
           fs.writeFileSync('test.js', '')
         }
         this.fs.copyTpl(this.templatePath('app.js'), this.destinationPath(answers.name + '/app.js'));
-        this.fs.copyTpl(this.templatePath('.npmrc'), this.destinationPath(answers.name + '/.npmrc'));
         this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath(answers.name + '/package.json'), {
           ModuleName: answers.name
         });
         this.fs.copyTpl(this.templatePath('package-lock.json'), this.destinationPath(answers.name + '/package-lock.json'), {
           ModuleName: answers.name
         });
+        this.fs.write(this.destinationPath(answers.name + '/.npmrc'), registry);
         answers.architectures.forEach((architecture, index) => {
           this.fs.copyTpl(this.templatePath('Dockerfile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/Dockerfile'));
         });
