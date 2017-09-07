@@ -20,7 +20,9 @@ If this is the first time you hear about YEOMAN, make sure to take a look at the
 
 - Run **yo azure-iot-edge-module**, follow the instructions to set up your azure iot edge module
 
-> If you are creating deployment file, you need to configure the json file with all your modules before deploying. If you are creating routes files, you need to update it to your real routes too.
+> If you are creating deployment file or routes file, navigate to the module directory you want put the file in first.
+> If you are creating deployment file, you need to configure the json file before deploying.
+> If you are creating routes files, you need to update it to your real routes too.
 
 ## Deploy and run the module
 
@@ -95,23 +97,23 @@ docker run -d -p 5000:5000 --name registry registry:2
 
 ### Build docker image for your module
 
-Navigate to the module directory we just created, you could build the module in any architecture as you want, let's take *windows-x64* for example:
+Navigate to the module directory we just created, you could build the module in any architecture as you want, let's take *linux-x64* for example:
 
 ```
-robocopy ./ ./out/windows-x64/ /NODCOPY
-copy .\Docker\windows-x64\Dockerfile .\out\windows-x64\
-docker build -t localhost:5000/<lower_case_module_name>:latest .\out\windows-x64\
+robocopy ./ ./out/linux-x64/ /NODCOPY
+copy .\Docker\linux-x64\Dockerfile .\out\linux-x64\
+docker build -t localhost:5000/<lower_case_image_name>:latest .\out\linux-x64\
 ```
 
 ### Push the image to local registry
 
 ```
-docker push localhost:5000/<lower_case_module_name>
+docker push localhost:5000/<lower_case_image_name>
 ```
 
 ### Deploy the module
 
-Deployment is accomplished using the edge cli tool. This tool uses Azure IoT Hub to send deployment information to the edge device. Run the following command 
+Deployment is accomplished using the edge cli tool.
 
 ```
 edge-explorer edge deployment create -m <path to deployment file> -d <edge device ID>

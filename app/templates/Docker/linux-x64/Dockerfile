@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.0.0-runtime
+FROM node:boron
 
 WORKDIR /app
 

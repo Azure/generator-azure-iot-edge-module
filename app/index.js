@@ -16,13 +16,13 @@ module.exports = class extends Generator {
         type: 'list',
         name: 'moduleType',
         choices: [
-          "custom module", "deployment file", "routes file"
+          "all", "custom module", "deployment file", "routes file"
         ],
         message: "Which one would you like to create?"
       },
       {
         when: (props) => {
-          return props.moduleType === 'custom module';
+          return (props.moduleType === 'custom module' || props.moduleType === 'all');
         },
         type: 'input',
         name: 'name',
@@ -37,26 +37,14 @@ module.exports = class extends Generator {
       },
       {
         when: (props) => {
-          return props.moduleType === 'custom module';
+          return (props.moduleType === 'custom module' || props.moduleType === 'all');
         },
         type: 'checkbox',
         name: 'architectures',
         message: 'Select the architecture(s) you want to support, your choice will help generate the corresponding dockerfile(s).',
         choices: [{
-            name: "windows-x64"
-          },
-          {
             name: "linux-x64"
-          },
-          {
-            name: "windows-x86"
-          },
-          {
-            name: "linux-x86"
-          },
-          {
-            name: "linux-arm32"
-          },
+          }
         ],
         validate: function (answer) {
           if (answer.length < 1) {
@@ -67,14 +55,14 @@ module.exports = class extends Generator {
       },
       {
         when: (props) => {
-          return props.moduleType === 'custom module';
+          return (props.moduleType === 'custom module' || props.moduleType === 'all');
         },
         type: 'confirm',
         name: 'test',
         message: 'Would you like to add unit test?'
       }
     ]).then((answers) => {
-      if (answers.moduleType === 'custom module') {
+      if (answers.moduleType === 'custom module' || answers.moduleType === 'all') {
         this.log('Creating files...');
         if (answers.test) {
           fs.mkdir(this.destinationPath(answers.name + 'Test'));
@@ -91,9 +79,17 @@ module.exports = class extends Generator {
         answers.architectures.forEach((architecture, index) => {
           this.fs.copyTpl(this.templatePath('Docker/' + architecture + '/Dockerfile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/Dockerfile'));
         });
-      } else if (answers.moduleType === 'deployment file') {
+      }
+      if (answers.moduleType === 'all') {
+        this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath(answers.name + '/deployment.json'), {
+          ModuleName: answers.name
+        });
+        this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath(answers.name + '/routes.json'));
+      }
+      if (answers.moduleType === 'deployment file') {
         this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath('deployment.json'));
-      } else if (answers.moduleType === 'routes file') {
+      }
+      if (answers.moduleType === 'routes file') {
         this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath('routes.json'));
       }
     });
