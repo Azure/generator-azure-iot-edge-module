@@ -15,6 +15,8 @@ const config = {
 
 function main() {
   const client = DeviceClient.fromConnectionString(config.connectionString, Protocol);
+  var dataArr = [];
+
   client.open(err => {
     if (err) {
       console.error(`Connection error: ${err}`);
@@ -25,7 +27,7 @@ function main() {
           var message = JSON.parse(msg.data.toString());
           if (parseInt(message.Temperature) > TemperatureThreshold) {
             console.log('sending');
-            const data = {
+            var data = {
               temperature: message.Temperature,
               properties: {
                 MessageType: "Alert"
@@ -34,19 +36,28 @@ function main() {
                 outputName: "nodeAlertOutput"
               }
             };
-
-            client.sendEvent(new Message(JSON.stringify(data)),
-              err => {
-                if (err) {
-                  console.error(`Message send error: ${err}`);
-                }
-              });
+            dataArr.push(data);
           }
         } catch (e) {
           console.log("Invalid message: " + e);
           return;
         }
       });
+
+      const sendMessage = () => {
+        var message = dataArr.shift();
+        if (message !== undefined) {
+          client.sendEvent(new Message(JSON.stringify(message)),
+            err => {
+              if (err) {
+                console.error(`Message send error: ${err}`);
+              } else{
+                setTimeout(sendMessage, config.messageInterval);
+              }
+            });
+        }
+      };
+      setTimeout(sendMessage, config.messageInterval);
 
       client.getTwin(function (err, twin) {
         if (err) {
