@@ -8,7 +8,9 @@ const {
 var TemperatureThreshold = 25;
 
 const config = {
-  connectionString: "<Your IoT Hub Connection String>",
+  connectionString: process.env.EdgeHubConnectionString,
+  messageInterval: process.env.MessageInterval || 2000,
+  maxTemp: process.env.MaxTemp || 40
 };
 
 function main() {
