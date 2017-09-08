@@ -11,7 +11,7 @@ module.exports = class extends Generator {
 
   prompting() {
     this.log(yosay('Hey You\r\nWelcome to Azure IoT Edge Module Generator'));
-    let registry = "http://edgenpm.southcentralus.cloudapp.azure.com/";
+    let registry = "registry=http://edgenpm.southcentralus.cloudapp.azure.com/";
     return this.prompt([{
         type: 'list',
         name: 'moduleType',
