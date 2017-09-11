@@ -1,15 +1,12 @@
 'use strict';
 
 const Protocol = require('azure-iot-device-mqtt').Mqtt;
-const {
-  Client: DeviceClient,
-  Message
-} = require('azure-iot-device');
+const { Client: DeviceClient, Message } = require('azure-iot-device');
 var TemperatureThreshold = 25;
 
 const config = {
   connectionString: process.env.EdgeHubConnectionString,
-  messageInterval: process.env.MessageInterval || 2000,
+  messageInterval: process.env.MessageInterval || 3000,
   maxTemp: process.env.MaxTemp || 40
 };
 
@@ -21,20 +18,16 @@ function main() {
     if (err) {
       console.error(`Connection error: ${err}`);
     } else {
-      console.log('running...');
-      client.on('message', (msg, context) => {
+      client.on('event', (msg) => {
         try {
-          var message = JSON.parse(msg.data.toString());
-          if (parseInt(message.Temperature) > TemperatureThreshold) {
-            console.log('sending');
+          console.log('receiving a message: ' + JSON.stringify(msg));
+          if (msg.inputName !== 'input1') {
+            return;
+          }
+          var data = JSON.parse(String.fromCharCode.apply(null, msg.data.data));
+          if (data.Temperature > TemperatureThreshold) {
             var data = {
-              temperature: message.Temperature,
-              properties: {
-                MessageType: "Alert"
-              },
-              systemProperties: {
-                outputName: "nodeAlertOutput"
-              }
+              temperature: data.Temperature
             };
             dataArr.push(data);
           }
@@ -47,11 +40,12 @@ function main() {
       const sendMessage = () => {
         var message = dataArr.shift();
         if (message !== undefined) {
-          client.sendEvent(new Message(JSON.stringify(message)),
+          console.log("send out a message: " + JSON.stringify(message));
+          client.sendEvent("nodeAlertOutput", new Message(JSON.stringify(message)),
             err => {
               if (err) {
                 console.error(`Message send error: ${err}`);
-              } else{
+              } else {
                 setTimeout(sendMessage, config.messageInterval);
               }
             });
