@@ -1,7 +1,7 @@
 {
     "modules": {
-        "<%= ModuleName %>": {
-            "name": "<%= ModuleName %>",
+        "ModuleName": {
+            "name": "ModuleName",
             "version": "1.0",
             "type": "docker",
             "status": "running",
