@@ -10,11 +10,11 @@ describe('generator-azure-iot-edge-module: app', function () {
             .withPrompts({
                 moduleType: 'custom module',
                 name: 'TestModule',
-                architectures: ['windows-x64'],
+                architectures: ['linux-x64'],
                 test: false
             })
             .then(() => {
-                assert.file(['TestModule/app.js', 'TestModule/package.json', 'TestModule/package-lock.json', 'TestModule/.npmrc', 'TestModule/Docker/windows-x64/Dockerfile']);
+                assert.file(['TestModule/app.js', 'TestModule/package.json', 'TestModule/package-lock.json', 'TestModule/.npmrc', 'TestModule/Docker/linux-x64/Dockerfile']);
                 assert.noFile('Test/test.js');
                 assert.noFile('deployment.json');
                 assert.noFile('routes.json');
