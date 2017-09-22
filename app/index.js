@@ -81,9 +81,7 @@ module.exports = class extends Generator {
         });
       }
       if (answers.moduleType === 'all') {
-        this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath(answers.name + '/deployment.json'), {
-          ModuleName: answers.name
-        });
+        this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath(answers.name + '/deployment.json'));
         this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath(answers.name + '/routes.json'));
       }
       if (answers.moduleType === 'deployment file') {
