@@ -73,10 +73,6 @@ module.exports = class extends Generator {
       this.moduleName = answers.name;
       if (answers.moduleType === 'custom module' || answers.moduleType === 'all') {
         this.log('Creating files...');
-        if (answers.test) {
-          fs.mkdir(this.destinationPath(answers.name + '/Test'));
-          fs.writeFileSync('test.js', '')
-        }
         this.fs.copyTpl(this.templatePath('app.js'), this.destinationPath(answers.name + '/app.js'));
         this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath(answers.name + '/package.json'), {
           ModuleName: answers.name
@@ -86,6 +82,7 @@ module.exports = class extends Generator {
         });
         this.fs.write(this.destinationPath(answers.name + '/.npmrc'), registry);
         this.fs.copyTpl(this.templatePath('.gitignore'), this.destinationPath(answers.name + '/.gitignore'));
+
         answers.architectures.forEach((architecture, index) => {
           this.fs.copyTpl(this.templatePath('Docker/' + architecture + '/Dockerfile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/Dockerfile'));
         });
@@ -101,13 +98,17 @@ module.exports = class extends Generator {
       if (answers.moduleType === 'routes file') {
         this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath('routes.json'));
       }
+      if (answers.test) {
+        this.fs.copyTpl(this.templatePath('test.js'), this.destinationPath(answers.name + '/Test/test.js'));
+      }
     });
   }
 
   install() {
-    if (this.restore && this.moduleName) {   
+    if (this.restore && this.moduleName) {
       process.chdir(this.moduleName);
-      this.spawnCommandSync('npm', ['install']);      
+      this.spawnCommandSync('npm', ['install']);
     }
+    console.log('\r\nAll Set!\r\n');
   }
 }
