@@ -43,9 +43,8 @@ module.exports = class extends Generator {
         name: 'architectures',
         message: 'Select the architecture(s) you want to support, your choice will help generate the corresponding dockerfile(s).',
         choices: [{
-            name: "linux-x64"
-          }
-        ],
+          name: "linux-x64"
+        }],
         validate: function (answer) {
           if (answer.length < 1) {
             return 'You must select at least one architecture.';
@@ -58,14 +57,24 @@ module.exports = class extends Generator {
           return (props.moduleType === 'custom module' || props.moduleType === 'all');
         },
         type: 'confirm',
+        name: 'restore',
+        message: 'Would you like to restore npm dependencies (default yes)?'
+      },
+      {
+        when: (props) => {
+          return (props.moduleType === 'custom module' || props.moduleType === 'all');
+        },
+        type: 'confirm',
         name: 'test',
-        message: 'Would you like to add unit test?'
+        message: 'Would you like to add unit test (default yes)?'
       }
     ]).then((answers) => {
+      this.restore = answers.restore;
+      this.moduleName = answers.name;
       if (answers.moduleType === 'custom module' || answers.moduleType === 'all') {
         this.log('Creating files...');
         if (answers.test) {
-          fs.mkdir(this.destinationPath(answers.name + 'Test'));
+          fs.mkdir(this.destinationPath(answers.name + '/Test'));
           fs.writeFileSync('test.js', '')
         }
         this.fs.copyTpl(this.templatePath('app.js'), this.destinationPath(answers.name + '/app.js'));
@@ -76,11 +85,13 @@ module.exports = class extends Generator {
           ModuleName: answers.name
         });
         this.fs.write(this.destinationPath(answers.name + '/.npmrc'), registry);
+        this.fs.copyTpl(this.templatePath('.gitignore'), this.destinationPath(answers.name + '/.gitignore'));
         answers.architectures.forEach((architecture, index) => {
           this.fs.copyTpl(this.templatePath('Docker/' + architecture + '/Dockerfile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/Dockerfile'));
         });
       }
       if (answers.moduleType === 'all') {
+        this.fs.copyTpl(this.templatePath('.gitignore'), this.destinationPath(answers.name + '/.gitignore'));
         this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath(answers.name + '/deployment.json'));
         this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath(answers.name + '/routes.json'));
       }
@@ -91,5 +102,12 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath('routes.json'));
       }
     });
+  }
+
+  install() {
+    if (this.restore && this.moduleName) {   
+      process.chdir(this.moduleName);
+      this.spawnCommandSync('npm', ['install']);      
+    }
   }
 }
