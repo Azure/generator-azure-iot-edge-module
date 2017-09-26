@@ -75,9 +75,9 @@ npm install -g edge-explorer@latest --registry http://edgenpm.southcentralus.clo
 npm install -g launch-edge-runtime@latest --registry http://edgenpm.southcentralus.cloudapp.azure.com/
 ```
 
-### Launch edge runtime and 
+### Launch edge runtime and login edge explorer
 
-Make sure you’re using a device connection string and not IoT Hub connection string if you get the error, “Connection string does not have a DeviceId element. Please supply a *device* connection string and not an Azure IoT Hub connection string.”
+Make sure you’re using a device connection string not IoT Hub connection string if you get the error, “Connection string does not have a DeviceId element. Please supply a *device* connection string and not an Azure IoT Hub connection string.”
 
 ```
 launch-edge-runtime -c "<IoT Hub device connection string>"
