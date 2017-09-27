@@ -88,7 +88,7 @@ module.exports = class extends Generator {
         });
       }
       if (answers.moduleType === 'all') {
-        this.fs.copyTpl(this.templatePath('.gitignore'), this.destinationPath(answers.name + '/.gitignore'));
+        this.fs.copyTpl(this.templatePath('ignore.txt'), this.destinationPath(answers.name + '/.gitignore'));
         this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath(answers.name + '/deployment.json'));
         this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath(answers.name + '/routes.json'));
       }
