@@ -47,14 +47,4 @@ describe('generator-azure-iot-edge-module: app', function () {
                 assert.file('deployment.json');
             });
     });
-
-    it('should generate routes.json file when select the module type', function () {
-        return helpers.run(path.join(__dirname, '../app'))
-            .withPrompts({
-                moduleType: 'routes file'
-            })
-            .then(() => {
-                assert.file('routes.json');
-            });
-    });
 });

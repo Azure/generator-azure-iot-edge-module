@@ -1,70 +1,67 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 'use strict';
 
-const Protocol = require('azure-iot-device-mqtt').Mqtt;
-const { Client: DeviceClient, Message } = require('azure-iot-device');
-var TemperatureThreshold = 25;
+var Protocol = require('azure-iot-device-mqtt').Mqtt;
+var Client = require('azure-iot-device').Client;
+var Message = require('azure-iot-device').Message;
+var fs = require('fs');
 
-const config = {
-  connectionString: process.env.EdgeHubConnectionString,
-  messageInterval: process.env.MessageInterval || 3000,
-  maxTemp: process.env.MaxTemp || 40
-};
+var connectionString = process.env.EdgeHubConnectionString;
 
-function main() {
-  const client = DeviceClient.fromConnectionString(config.connectionString, Protocol);
-  var dataArr = [];
+var client = Client.fromConnectionString(connectionString, Protocol);
+console.log('got client');
 
-  client.open(err => {
-    if (err) {
-      console.error(`Connection error: ${err}`);
-    } else {
-      client.on('event', (msg) => {
-        try {
-          console.log('receiving a message: ' + JSON.stringify(msg));
-          if (msg.inputName !== 'input1') {
-            return;
+client.on('error', function (err) {
+  console.error(err.message);
+});
+
+client.setOptions({
+  ca: fs.readFileSync(process.env.EdgeModuleCACertificateFile).toString('ascii')
+}, function(err) {
+  if (err) {
+    console.log('error:' + err);
+  } else {
+    // connect to the edge instance
+    client.open(function (err) {
+      if (err) {
+        console.error('Could not connect: ' + err.message);
+      } else {
+        console.log('Client connected');
+
+        // Act on input messages to the module.
+        client.on('inputMessage', function (inputName, msg) {
+
+          client.complete(msg, printResultFor('completed'));
+
+          if (inputName === 'deviceControl') {
+            var messageBody = JSON.parse(msg.getBytes().toString('ascii'));
+            console.log('deviceControl message received: enable = ' + messageBody.enabled);
+          } else {
+            console.log('unknown inputMessage received on input ' + inputName);
+            console.log(msg.getBytes().toString('ascii'));
           }
-          var data = JSON.parse(String.fromCharCode.apply(null, msg.data.data));
-          if (data.Temperature > TemperatureThreshold) {
-            var data = {
-              temperature: data.Temperature
-            };
-            dataArr.push(data);
-          }
-        } catch (e) {
-          console.log("Invalid message: " + e);
-          return;
-        }
-      });
+        });
+      }
+    });
 
-      const sendMessage = () => {
-        var message = dataArr.shift();
-        if (message !== undefined) {
-          console.log("send out a message: " + JSON.stringify(message));
-          client.sendEvent("nodeAlertOutput", new Message(JSON.stringify(message)),
-            err => {
-              if (err) {
-                console.error(`Message send error: ${err}`);
-              } else {
-                setTimeout(sendMessage, config.messageInterval);
-              }
-            });
-        }
-      };
-      setTimeout(sendMessage, config.messageInterval);
+    // Create a message and send it every two seconds
+    setInterval(function () {
+      var temperature = 20 + (Math.random() * 10); // range: [20, 30]
+      var temperatureAlert = (temperature > 28) ? 'true' : 'false';
+      var data = JSON.stringify({ deviceId: 'myFirstDevice', temperature: temperature, temperatureAlert: temperatureAlert });
+      var message = new Message(data);
+      console.log('Sending message: ' + message.getData());
+      client.sendOutputEvent('temperature', message, printResultFor('sendOutputEvent'));
+    }, 2000);
+  }
+});
 
-      client.getTwin(function (err, twin) {
-        if (err) {
-          console.error('could not get twin');
-        } else {
-          twin.on('properties.desired', function (delta) {
-            if (delta.TemperatureThreshold !== undefined) {
-              TemperatureThreshold = delta.TemperatureThreshold;
-            }
-          });
-        }
-      });
-    }
-  });
+// Helper function to print results in the console
+function printResultFor(op) {
+  return function printResult(err, res) {
+    if (err) console.log(op + ' error: ' + err.toString());
+    if (res) console.log(op + ' status: ' + res.constructor.name);
+  };
 }
-main();
