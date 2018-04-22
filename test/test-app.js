@@ -1,4 +1,4 @@
-"user strict";
+"use strict";
 
 var assert = require("yeoman-assert");
 var fs = require("fs");
