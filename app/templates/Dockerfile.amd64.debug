@@ -1,4 +1,4 @@
-FROM stefanscherer/node-windows:8-nanoserver
+FROM node:8-alpine
 
 WORKDIR /app/
 
@@ -10,4 +10,6 @@ COPY app.js ./
 
 EXPOSE 9229
 
-CMD ["node", "app.js"]
+USER node
+
+CMD ["node", "--inspect=0.0.0.0:9229", "app.js"]
