@@ -21,7 +21,6 @@
     "test": "mocha"
   },
   "dependencies": {
-    "fs-extra": "^5.0.0",
     "yeoman-generator": "^2.0.4",
     "yosay": "^2.0.2"
   },
