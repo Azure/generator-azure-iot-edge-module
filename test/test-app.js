@@ -23,8 +23,8 @@ describe("generator-azure-iot-edge-module: app", function () {
                     "TestModule/package.json"
                 ]);
 
-                assert.jsonFileContent("TestModule/module.json", JSON.parse(fs.readFileSync(path.join(__dirname, "resources/module.json"), "utf-8")));
-                assert.jsonFileContent("TestModule/package.json", JSON.parse(fs.readFileSync(path.join(__dirname, "resources/package.json"), "utf-8")));
+                assert.jsonFileContent("TestModule/module.json", JSON.parse(fs.readFileSync(path.join(__dirname, "assets/module.json"), "utf-8")));
+                assert.jsonFileContent("TestModule/package.json", JSON.parse(fs.readFileSync(path.join(__dirname, "assets/package.json"), "utf-8")));
             });
     });
 
@@ -45,8 +45,8 @@ describe("generator-azure-iot-edge-module: app", function () {
                     "TestModule/package.json"
                 ]);
 
-                assert.jsonFileContent("TestModule/module.json", JSON.parse(fs.readFileSync(path.join(__dirname, "resources/module.json"), "utf-8")));
-                assert.jsonFileContent("TestModule/package.json", JSON.parse(fs.readFileSync(path.join(__dirname, "resources/package.json"), "utf-8")));
+                assert.jsonFileContent("TestModule/module.json", JSON.parse(fs.readFileSync(path.join(__dirname, "assets/module.json"), "utf-8")));
+                assert.jsonFileContent("TestModule/package.json", JSON.parse(fs.readFileSync(path.join(__dirname, "assets/package.json"), "utf-8")));
             });
     });
 });
