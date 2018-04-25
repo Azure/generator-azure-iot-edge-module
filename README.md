@@ -1,6 +1,6 @@
-# Azure IoT Edge JavaScript Module Generator
+# Azure IoT Edge Node.js Module Generator
 
-`generator-azure-iot-edge-module` creates a base template to start a new Azure IoT Edge JavaScript module
+`generator-azure-iot-edge-module` creates a base template to start a new Azure IoT Edge Node.js module
 
 ## Install
 ```
@@ -26,7 +26,7 @@ $ yo azure-iot-edge-module -n filterModule -r localhost:5000/filtermodule
 
 ## Build, deploy and run the module
 
-Check out the [document](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-javascript-module).
+Check out the [document](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-nodejs-module).
 
 Learn more about Azure IoT Edge [here](https://docs.microsoft.com/en-us/azure/iot-edge/).
 

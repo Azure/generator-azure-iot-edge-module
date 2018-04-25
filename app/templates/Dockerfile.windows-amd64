@@ -8,4 +8,6 @@ RUN npm install --production
 
 COPY app.js ./
 
-CMD ["cmd", "/c", "node %DEBUG_OPTION% app.js"]
+ENV DEBUG_OPTION " "
+
+CMD ["cmd", "/C", "node %DEBUG_OPTION% app.js"]

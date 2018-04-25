@@ -10,4 +10,6 @@ COPY app.js ./
 
 USER node
 
+ENV DEBUG_OPTION " "
+
 CMD ["sh", "-c", "node $DEBUG_OPTION app.js"]
