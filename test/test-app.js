@@ -1,60 +1,50 @@
-"user strict";
+"use strict";
 
-var assert = require('yeoman-assert');
-var helpers = require('yeoman-test');
-var path = require('path');
+var assert = require("yeoman-assert");
+var fs = require("fs");
+var helpers = require("yeoman-test");
+var path = require("path");
 
-describe('generator-azure-iot-edge-module: app', function () {
-    it('should generate all custom module files', function () {
-        return helpers.run(path.join(__dirname, '../app'))
+describe("generator-azure-iot-edge-module: app", function () {
+    it("should generate module files with prompts", function () {
+        return helpers.run(path.join(__dirname, "../app"))
             .withPrompts({
-                moduleType: 'custom module',
-                name: 'TestModule',
-                architectures: ['linux-x64'],
-                restore: false,
-                test: false
+                name: "TestModule",
+                repository: "localhost:5555/TestModule"
             })
             .then(() => {
-                assert.file(['TestModule/app.js', 'TestModule/package.json', 'TestModule/package-lock.json', 'TestModule/.gitignore', 'TestModule/.npmrc', 'TestModule/Docker/linux-x64/Dockerfile']);
-                assert.noFile('TestModule//Test/test.js');
-                assert.noFile('TestModule/deployment.json');
-                assert.noFile('TestModule/routes.json');
+                assert.file([
+                    "TestModule/.gitignore",
+                    "TestModule/app.js",
+                    "TestModule/Dockerfile",
+                    "TestModule/Dockerfile.windows-amd64",
+                    "TestModule/module.json",
+                    "TestModule/package.json"
+                ]);
+
+                assert.jsonFileContent("TestModule/module.json", JSON.parse(fs.readFileSync(path.join(__dirname, "assets/module.json"), "utf-8")));
+                assert.jsonFileContent("TestModule/package.json", JSON.parse(fs.readFileSync(path.join(__dirname, "assets/package.json"), "utf-8")));
             });
     });
 
-    it('should generate test files', function () {
-        return helpers.run(path.join(__dirname, '../app'))
-            .withPrompts({
-                moduleType: 'custom module',
-                name: 'TestModule',
-                architectures: ['linux-x64'],
-                restore: false,
-                test: true
+    it("should generate module files with options", function () {
+        return helpers.run(path.join(__dirname, "../app"))
+            .withOptions({
+                name: "TestModule",
+                repository: "localhost:5555/TestModule"
             })
             .then(() => {
-                assert.file(['TestModule/app.js', 'TestModule/package.json', 'TestModule/package-lock.json', 'TestModule/.gitignore', 'TestModule/.npmrc', 'TestModule/Docker/linux-x64/Dockerfile', 'TestModule//Test/test.js']);
-                assert.noFile('TestModule/deployment.json');
-                assert.noFile('TestModule/routes.json');
-            });
-    });
+                assert.file([
+                    "TestModule/.gitignore",
+                    "TestModule/app.js",
+                    "TestModule/Dockerfile",
+                    "TestModule/Dockerfile.windows-amd64",
+                    "TestModule/module.json",
+                    "TestModule/package.json"
+                ]);
 
-    it('should generate deployment.json file when select the module type', function () {
-        return helpers.run(path.join(__dirname, '../app'))
-            .withPrompts({
-                moduleType: 'deployment file'
-            })
-            .then(() => {
-                assert.file('deployment.json');
-            });
-    });
-
-    it('should generate routes.json file when select the module type', function () {
-        return helpers.run(path.join(__dirname, '../app'))
-            .withPrompts({
-                moduleType: 'routes file'
-            })
-            .then(() => {
-                assert.file('routes.json');
+                assert.jsonFileContent("TestModule/module.json", JSON.parse(fs.readFileSync(path.join(__dirname, "assets/module.json"), "utf-8")));
+                assert.jsonFileContent("TestModule/package.json", JSON.parse(fs.readFileSync(path.join(__dirname, "assets/package.json"), "utf-8")));
             });
     });
 });

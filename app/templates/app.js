@@ -1,70 +1,63 @@
 'use strict';
 
-const Protocol = require('azure-iot-device-mqtt').Mqtt;
-const { Client: DeviceClient, Message } = require('azure-iot-device');
-var TemperatureThreshold = 25;
+var Transport = require('azure-iot-device-mqtt').Mqtt;
+var Client = require('azure-iot-device').Client;
+var Message = require('azure-iot-device').Message;
+var fs = require('fs');
 
-const config = {
-  connectionString: process.env.EdgeHubConnectionString,
-  messageInterval: process.env.MessageInterval || 3000,
-  maxTemp: process.env.MaxTemp || 40
-};
+var connectionString = process.env.EdgeHubConnectionString;
+var caCertFile = process.env.EdgeModuleCACertificateFile;
 
-function main() {
-  const client = DeviceClient.fromConnectionString(config.connectionString, Protocol);
-  var dataArr = [];
+var client = Client.fromConnectionString(connectionString, Transport);
+console.log("Connection String: " + connectionString);
 
-  client.open(err => {
-    if (err) {
-      console.error(`Connection error: ${err}`);
-    } else {
-      client.on('event', (msg) => {
-        try {
-          console.log('receiving a message: ' + JSON.stringify(msg));
-          if (msg.inputName !== 'input1') {
-            return;
-          }
-          var data = JSON.parse(String.fromCharCode.apply(null, msg.data.data));
-          if (data.Temperature > TemperatureThreshold) {
-            var data = {
-              temperature: data.Temperature
-            };
-            dataArr.push(data);
-          }
-        } catch (e) {
-          console.log("Invalid message: " + e);
-          return;
-        }
-      });
+client.on('error', function (err) {
+  console.error(err.message);
+});
 
-      const sendMessage = () => {
-        var message = dataArr.shift();
-        if (message !== undefined) {
-          console.log("send out a message: " + JSON.stringify(message));
-          client.sendEvent("nodeAlertOutput", new Message(JSON.stringify(message)),
-            err => {
-              if (err) {
-                console.error(`Message send error: ${err}`);
-              } else {
-                setTimeout(sendMessage, config.messageInterval);
-              }
-            });
-        }
-      };
-      setTimeout(sendMessage, config.messageInterval);
+client.setOptions({
+  ca: fs.readFileSync(caCertFile).toString('ascii')
+}, function (err) {
+  if (err) {
+    console.log('error:' + err);
+  } else {
+    // connect to the edge instance
+    client.open(function (err) {
+      if (err) {
+        console.error('Could not connect: ' + err.message);
+      } else {
+        console.log('IoT Hub module client initialized');
 
-      client.getTwin(function (err, twin) {
-        if (err) {
-          console.error('could not get twin');
-        } else {
-          twin.on('properties.desired', function (delta) {
-            if (delta.TemperatureThreshold !== undefined) {
-              TemperatureThreshold = delta.TemperatureThreshold;
-            }
-          });
-        }
-      });
+        // Act on input messages to the module.
+        client.on('inputMessage', function (inputName, msg) {
+          pipeMessage(inputName, msg);
+        });
+      }
+    });
+  }
+});
+
+// This function just pipes the messages without any change.
+function pipeMessage(inputName, msg) {
+  client.complete(msg, printResultFor('Receiving message:'));
+
+  if (inputName === 'input1') {
+    var message = msg.getBytes().toString('utf8');
+    if (message) {
+      var outputMsg = new Message(message);
+      client.sendOutputEvent('output1', outputMsg, printResultFor('Sending received message'));
     }
-  });
+  }
 }
-main();
+
+// Helper function to print results in the console
+function printResultFor(op) {
+  return function printResult(err, res) {
+    if (err) {
+      console.log(op + ' error: ' + err.toString());
+    }
+    if (res) {
+      console.log(op + ' status: ' + res.constructor.name);
+    }
+  };
+}

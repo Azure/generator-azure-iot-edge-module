@@ -1,114 +1,85 @@
 "use strict";
 
-var Generator = require('yeoman-generator');
-var yosay = require('yosay');
-var fs = require('fs');
+var Generator = require("yeoman-generator");
+var path = require("path");
+var yosay = require("yosay");
 
 module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts);
-  }
 
-  prompting() {
-    this.log(yosay('Hey You\r\nWelcome to Azure IoT Edge Module Generator'));
-    let registry = "registry=http://edgenpm.southcentralus.cloudapp.azure.com/";
-    return this.prompt([{
-        type: 'list',
-        name: 'moduleType',
-        choices: [
-          "all", "custom module", "deployment file", "routes file"
-        ],
-        message: "Which one would you like to create?"
-      },
-      {
-        when: (props) => {
-          return (props.moduleType === 'custom module' || props.moduleType === 'all');
-        },
-        type: 'input',
-        name: 'name',
-        default: 'AzureIoTEdgeModule',
-        message: 'What\'s the name of your module',
-        validate: function (folderName) {
-          if (folderName.match(/^[a-z0-9_-\s]+$/gi) === null) {
-            return 'Please input a valid module name';
-          }
-          return true;
-        }
-      },
-      {
-        when: (props) => {
-          return (props.moduleType === 'custom module' || props.moduleType === 'all');
-        },
-        type: 'checkbox',
-        name: 'architectures',
-        message: 'Select the architecture(s) you want to support, your choice will help generate the corresponding dockerfile(s).',
-        choices: [{
-          name: "linux-x64"
-        }],
-        validate: function (answer) {
-          if (answer.length < 1) {
-            return 'You must select at least one architecture.';
-          }
-          return true;
-        }
-      },
-      {
-        when: (props) => {
-          return (props.moduleType === 'custom module' || props.moduleType === 'all');
-        },
-        type: 'confirm',
-        name: 'restore',
-        message: 'Would you like to restore npm dependencies (default yes)?'
-      },
-      {
-        when: (props) => {
-          return (props.moduleType === 'custom module' || props.moduleType === 'all');
-        },
-        type: 'confirm',
-        name: 'test',
-        message: 'Would you like to add unit test (default yes)?'
-      }
-    ]).then((answers) => {
-      this.restore = answers.restore;
-      this.moduleName = answers.name;
-      if (answers.moduleType === 'custom module' || answers.moduleType === 'all') {
-        this.log('Creating files...');
-        this.fs.copyTpl(this.templatePath('app.js'), this.destinationPath(answers.name + '/app.js'));
-        this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath(answers.name + '/package.json'), {
-          ModuleName: answers.name
-        });
-        this.fs.copyTpl(this.templatePath('package-lock.json'), this.destinationPath(answers.name + '/package-lock.json'), {
-          ModuleName: answers.name
-        });
-        this.fs.write(this.destinationPath(answers.name + '/.npmrc'), registry);
-        this.fs.copyTpl(this.templatePath('.gitignore'), this.destinationPath(answers.name + '/.gitignore'));
-
-        answers.architectures.forEach((architecture, index) => {
-          this.fs.copyTpl(this.templatePath('Docker/' + architecture + '/Dockerfile'), this.destinationPath(answers.name + '/Docker/' + architecture + '/Dockerfile'));
-        });
-      }
-      if (answers.moduleType === 'all') {
-        this.fs.copyTpl(this.templatePath('ignore.txt'), this.destinationPath(answers.name + '/.gitignore'));
-        this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath(answers.name + '/deployment.json'));
-        this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath(answers.name + '/routes.json'));
-      }
-      if (answers.moduleType === 'deployment file') {
-        this.fs.copyTpl(this.templatePath('deployment.json'), this.destinationPath('deployment.json'));
-      }
-      if (answers.moduleType === 'routes file') {
-        this.fs.copyTpl(this.templatePath('routes.json'), this.destinationPath('routes.json'));
-      }
-      if (answers.test) {
-        this.fs.copyTpl(this.templatePath('test.js'), this.destinationPath(answers.name + '/Test/test.js'));
-      }
+    this.option("name", {
+      desc: "Module name",
+      alias: "n",
+      type: String
+    });
+    this.option("repository", {
+      desc: "Docker image repository for your module",
+      alias: "r",
+      type: String
     });
   }
 
-  install() {
-    if (this.restore && this.moduleName) {
-      process.chdir(this.moduleName);
-      this.spawnCommandSync('npm', ['install']);
-    }
-    console.log('\r\nAll Set!\r\n');
+  prompting() {
+    this.log(yosay("Hey You\r\nWelcome to Azure IoT Edge module generator"));
+
+    return this.prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "What's the name of your module?",
+        default: "SampleModule",
+        when: () => {
+          return !this.options.name; // skip the prompt when the value is already passed as a command option
+        },
+        validate: (name) => {
+          if (!name) {
+            return "Module name could not be empty";
+          }
+          if (name.startsWith("_") || name.endsWith("_")) {
+            return "Module name must not start or end with the symbol _";
+          }
+          if (name.match(/[^a-zA-Z0-9\_]/)) {
+            return "Module name must contain only alphanumeric characters or the symbol _";
+          }
+          return true;
+        }
+      },
+      {
+        type: "input",
+        name: "repository",
+        "message": "What's the Docker image repository for your module?",
+        when: () => {
+          return !this.options.repository; // skip the prompt when the value is already passed as a command option
+        },
+        default: (answers) => {
+          const name = this.options.name || answers.name;
+          return `localhost:5000/${name.toLowerCase()}`;
+        }
+      }
+    ]).then((answers) => {
+      this.name = (this.options.name || answers.name).trim();
+      this.repository = (this.options.repository || answers.repository).trim().toLowerCase();
+    });
+  }
+
+  writing() {
+    this.log(`Creating ${this.name} module at ${this.repository} ...`);
+
+    this._copyStatic(".gitignore");
+    this._copyStatic("app.js");
+    this._copyStatic("Dockerfile");
+    this._copyStatic("Dockerfile.windows-amd64");
+
+    this._copyTemplate("module.json", { repository: this.repository });
+    this._copyTemplate("package.json", { name: this.name })
+  }
+
+  _copyStatic(file) {
+    this.fs.copy(this.templatePath(file), path.join(this.destinationPath(this.name), file));
+  }
+
+  _copyTemplate(file, context) {
+    this.fs.copyTpl(this.templatePath(file), path.join(this.destinationPath(this.name), file), context);
   }
 }

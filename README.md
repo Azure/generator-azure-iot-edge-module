@@ -1,133 +1,36 @@
-# generator-azure-iot-edge-module
+# Azure IoT Edge Node.js Module Generator
 
-> Scaffolding tool to help setup Azure IoT Edge module development environment.
+`generator-azure-iot-edge-module` creates a base template to start a new Azure IoT Edge Node.js module
 
+## Install
 ```
-yo azure-iot-edge-module
-```
-
-## Getting started
-
-If this is the first time you hear about YEOMAN, make sure to take a look at the [official homepage](http://yeoman.io/) first to see what it is about.
-
-- Make sure you have [node and npm](https://nodejs.org/en/download/ ) installed
-
-- Make sure you have yo installed: npm install -g yo
-
-- Set npm registry: npm config set registry https://www.myget.org/F/generator-azure-iot-edge-module/npm/
-
-- Install the generator: npm install -g generator-azure-iot-edge-module
-
-- Run **yo azure-iot-edge-module**, follow the instructions to set up your azure iot edge module
-
-> If you are creating deployment file or routes file, navigate to the module directory you want put the file in first.
-> If you are creating deployment file, you need to configure the json file before deploying.
-> If you are creating routes files, you need to update it to your real routes too.
-
-## Deploy and run the module
-
-azure-iot-edge-module sets up the Azure IoT Edge Module development environment, generating all necessary files for you.
-
-To make the module executable, there are several steps to do.
-
-### Install docker
-Ubuntu
-
-https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
-
-Windows 10
-
-https://download.docker.com/win/stable/InstallDocker.msi
-
-MAC
-
-https://store.docker.com/editions/community/docker-ce-desktop-mac
-
-Now navigate to the generated module folder in the first place.
-
-### Setup azure resources
-
-If you have develop experience with Azure, you could skip this part and go ahead to next one.
-
-1. Create an active Azure account
-
-(If you don't have an account, you can create one [free account](http://azure.microsoft.com/pricing/free-trial/) in minutes.)
-
-2. Create an Azure IoT Hub
-
-Reference [How to create an azure iot hub] (https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-through-portal) for step by step guidance.
-
-3. Create a device in azure iot hub
-
-Navigate to your iot hub in azure portal, find the **Device Explorer** to **Add** a device in the portal.
-Mark up the device connection string after creating completed.
-
-### Install the edge cli
-
-```
-npm install -g edge-explorer@latest --registry http://edgenpm.southcentralus.cloudapp.azure.com/
-```
-### Install tool to launch Azure IoT Edge
-
-> On Windows, If you have issues on the command line with the --registry command, try to use a PowerShell session
-
-```
-npm install -g launch-edge-runtime@latest --registry http://edgenpm.southcentralus.cloudapp.azure.com/
+$ npm i -g yo generator-azure-iot-edge-module
 ```
 
-### Launch edge runtime and login edge explorer
-
-Make sure you’re using a device connection string not IoT Hub connection string if you get the error, “Connection string does not have a DeviceId element. Please supply a *device* connection string and not an Azure IoT Hub connection string.”
-
+## Usage
 ```
-launch-edge-runtime -c "<IoT Hub device connection string>"
+$ yo azure-iot-edge-module
 ```
 
-Use the edge cli to log into the IoT hub to which your edge device is registered. Note that you need the IoT hub’s owner connection string. You can find this in the Azure Portal by going to your IoT hub -> Shared Access Policies -> iothubowner
+![](screenshots/yo.png)
 
+If you prefer one-liner:
 ```
-edge-explorer login "<IoT Hub connection string for iothubowner policy*>"
-```
-
-### Create and run local docker registry
-
-```
-docker run -d -p 5000:5000 --name registry registry:2
+$ yo azure-iot-edge-module -n <module_name> -r <image_repository>
 ```
 
-### Build docker image for your module
-
-Navigate to the module directory we just created, you could build the module in any architecture as you want, let's take *linux-x64* for example:
-
+For example:
 ```
-robocopy ./ ./out/linux-x64/ /NODCOPY
-copy .\Docker\linux-x64\Dockerfile .\out\linux-x64\
-docker build -t localhost:5000/<lower_case_image_name>:latest .\out\linux-x64\
+$ yo azure-iot-edge-module -n filterModule -r localhost:5000/filtermodule
 ```
 
-### Push the image to local registry
+## Build, deploy and run the module
 
-```
-docker push localhost:5000/<lower_case_image_name>
-```
+Check out the [document](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-nodejs-module).
 
-### Deploy the module
+Learn more about Azure IoT Edge [here](https://docs.microsoft.com/en-us/azure/iot-edge/).
 
-Deployment is accomplished using the edge cli tool.
-
-```
-edge-explorer edge deployment create -m <path to deployment file> -d <edge device ID>
-```
-
-Now we have the sample module deployed and running, you could monitor it with command 
-
-```
-edge-explorer monitor events <deviceID> --login <iothub connection string not device connection string>
-```
-
-There will be regular and continuing temperature message show in the console. If not, go back check if each step accomplished correctly.
-
-# Contributing
+## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
