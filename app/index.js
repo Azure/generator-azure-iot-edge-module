@@ -66,7 +66,7 @@ module.exports = class extends Generator {
   writing() {
     this.log(`Creating ${this.name} module at ${this.repository} ...`);
 
-    this._copyStatic(".gitignore");
+    this._copyStatic("gitignore", ".gitignore");
     this._copyStatic("app.js");
     this._copyStatic("Dockerfile");
     this._copyStatic("Dockerfile.windows-amd64");
@@ -75,8 +75,11 @@ module.exports = class extends Generator {
     this._copyTemplate("package.json", { name: this.name })
   }
 
-  _copyStatic(file) {
-    this.fs.copy(this.templatePath(file), path.join(this.destinationPath(this.name), file));
+  _copyStatic(from, to = undefined) {
+    if (to === undefined) {
+      to = from;
+    }
+    this.fs.copy(this.templatePath(from), path.join(this.destinationPath(this.name), to));
   }
 
   _copyTemplate(file, context) {
