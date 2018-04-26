@@ -9,7 +9,7 @@ var connectionString = process.env.EdgeHubConnectionString;
 var caCertFile = process.env.EdgeModuleCACertificateFile;
 
 var client = Client.fromConnectionString(connectionString, Transport);
-console.log("Connection String: " + connectionString);
+console.log('Connection String: ' + connectionString);
 
 client.on('error', function (err) {
   console.error(err.message);
@@ -39,7 +39,7 @@ client.setOptions({
 
 // This function just pipes the messages without any change.
 function pipeMessage(inputName, msg) {
-  client.complete(msg, printResultFor('Receiving message:'));
+  client.complete(msg, printResultFor('Receiving message'));
 
   if (inputName === 'input1') {
     var message = msg.getBytes().toString('utf8');
