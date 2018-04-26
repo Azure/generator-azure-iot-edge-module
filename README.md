@@ -24,11 +24,11 @@ For example:
 $ yo azure-iot-edge-module -n filterModule -r localhost:5000/filtermodule
 ```
 
-## Build, deploy and run the module
+## Documentation
 
-Check out the [document](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-nodejs-module).
-
-Learn more about Azure IoT Edge [here](https://docs.microsoft.com/en-us/azure/iot-edge/).
+* [Develop and deploy a Node.js IoT Edge module to your simulated device](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-node-module)
+* [Use Visual Studio Code to debug a Node.js module with Azure IoT Edge](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-vscode-debug-node-module)
+* [Azure IoT Edge](https://docs.microsoft.com/en-us/azure/iot-edge/)
 
 ## Contributing
 
