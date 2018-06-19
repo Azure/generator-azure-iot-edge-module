@@ -21,25 +21,25 @@ Client.fromEnvironment(Transport, function (err, client) {
 
         // Act on input messages to the module.
         client.on('inputMessage', function (inputName, msg) {
-          pipeMessage(inputName, msg);
+          pipeMessage(client, inputName, msg);
         });
       }
     });
   }
+});
 
-  // This function just pipes the messages without any change.
-  function pipeMessage(inputName, msg) {
-    client.complete(msg, printResultFor('Receiving message'));
+// This function just pipes the messages without any change.
+function pipeMessage(client, inputName, msg) {
+  client.complete(msg, printResultFor('Receiving message'));
 
-    if (inputName === 'input1') {
-      var message = msg.getBytes().toString('utf8');
-      if (message) {
-        var outputMsg = new Message(message);
-        client.sendOutputEvent('output1', outputMsg, printResultFor('Sending received message'));
-      }
+  if (inputName === 'input1') {
+    var message = msg.getBytes().toString('utf8');
+    if (message) {
+      var outputMsg = new Message(message);
+      client.sendOutputEvent('output1', outputMsg, printResultFor('Sending received message'));
     }
   }
-});
+}
 
 // Helper function to print results in the console
 function printResultFor(op) {
