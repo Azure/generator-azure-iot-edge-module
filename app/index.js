@@ -69,6 +69,7 @@ module.exports = class extends Generator {
     this._copyStatic('gitignore', '.gitignore');
     this._copyStatic('app.js');
     this._copyStatic('Dockerfile');
+    this._copyStatic('Dockerfile.arm32v7');
     this._copyStatic('Dockerfile.windows-amd64');
 
     this._copyTemplate('module.json', { repository: this.repository });

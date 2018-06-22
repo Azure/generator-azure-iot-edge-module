@@ -17,6 +17,7 @@ describe("generator-azure-iot-edge-module: app", function () {
                     "TestModule/.gitignore",
                     "TestModule/app.js",
                     "TestModule/Dockerfile",
+                    "TestModule/Dockerfile.arm32v7",
                     "TestModule/Dockerfile.windows-amd64",
                     "TestModule/module.json",
                     "TestModule/package.json"
@@ -38,6 +39,7 @@ describe("generator-azure-iot-edge-module: app", function () {
                     "TestModule/.gitignore",
                     "TestModule/app.js",
                     "TestModule/Dockerfile",
+                    "TestModule/Dockerfile.arm32v7",
                     "TestModule/Dockerfile.windows-amd64",
                     "TestModule/module.json",
                     "TestModule/package.json"
