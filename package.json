@@ -1,6 +1,6 @@
 {
   "name": "generator-azure-iot-edge-module",
-  "version": "1.0.0-rc2",
+  "version": "1.0.0-rc3",
   "description": "Yeoman generator for Azure IoT Edge Node module",
   "files": [
     "app"

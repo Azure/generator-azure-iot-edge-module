@@ -1,0 +1,15 @@
+FROM arm32v7/node:8
+
+WORKDIR /app/
+
+COPY package*.json ./
+
+RUN npm install --production
+
+COPY app.js ./
+
+USER node
+
+ENV DEBUG_OPTION " "
+
+CMD ["sh", "-c", "node $DEBUG_OPTION app.js"]
