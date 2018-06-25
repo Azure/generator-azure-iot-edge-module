@@ -1,4 +1,4 @@
-FROM arm32v7/node:8-slim
+FROM node:8-alpine
 
 WORKDIR /app/
 
@@ -10,4 +10,4 @@ COPY app.js ./
 
 USER node
 
-CMD ["node, "app.js"]
+CMD ["node", "--inspect=0.0.0.0:9229", "app.js"]
