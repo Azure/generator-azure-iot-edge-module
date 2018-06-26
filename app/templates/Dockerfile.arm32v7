@@ -10,4 +10,4 @@ COPY app.js ./
 
 USER node
 
-CMD ["node, "app.js"]
+CMD ["node", "app.js"]
