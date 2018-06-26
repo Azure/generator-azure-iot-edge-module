@@ -1,4 +1,4 @@
-FROM node:8-slim
+FROM arm32v7/node:8-slim
 
 WORKDIR /app/
 
@@ -10,6 +10,4 @@ COPY app.js ./
 
 USER node
 
-ENV DEBUG_OPTION " "
-
-CMD ["sh", "-c", "node $DEBUG_OPTION app.js"]
+CMD ["node", "--inspect=0.0.0.0:9229", "app.js"]
