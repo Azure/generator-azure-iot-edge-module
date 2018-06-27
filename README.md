@@ -12,7 +12,7 @@ $ npm i -g yo generator-azure-iot-edge-module
 $ yo azure-iot-edge-module
 ```
 
-![](screenshots/yo.png)
+![](https://raw.githubusercontent.com/Azure/generator-azure-iot-edge-module/master/screenshots/yo.png)
 
 If you prefer one-liner:
 ```
