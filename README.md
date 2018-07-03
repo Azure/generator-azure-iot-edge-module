@@ -26,8 +26,8 @@ $ yo azure-iot-edge-module -n filterModule -r localhost:5000/filtermodule
 
 ## Documentation
 
-* [Develop and deploy a Node.js IoT Edge module to your simulated device](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-node-module)
-* [Use Visual Studio Code to debug a Node.js module with Azure IoT Edge](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-vscode-debug-node-module)
+* [Tutorial: Develop and deploy a Node.js IoT Edge module to your simulated device](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-node-module)
+* [Develop and debug Node.js modules with Azure IoT Edge for Visual Studio Code](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-develop-node-module)
 * [Azure IoT Edge](https://docs.microsoft.com/en-us/azure/iot-edge/)
 
 ## Contributing
