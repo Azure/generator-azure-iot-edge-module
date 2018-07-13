@@ -6,16 +6,16 @@ var Message = require('azure-iot-device').Message;
 
 Client.fromEnvironment(Transport, function (err, client) {
   if (err) {
-    console.log('error:' + err);
+    throw err;
   } else {
     client.on('error', function (err) {
-      console.error(err.message);
+      throw err;
     });
 
     // connect to the Edge instance
     client.open(function (err) {
       if (err) {
-        console.error('Could not connect: ' + err.message);
+        throw err;
       } else {
         console.log('IoT Hub module client initialized');
 
