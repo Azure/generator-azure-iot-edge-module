@@ -1,7 +1,7 @@
 {
   "name": "generator-azure-iot-edge-module",
-  "version": "1.1.0",
-  "description": "Yeoman generator for Azure IoT Edge Node module",
+  "version": "1.1.0-rc",
+  "description": "Yeoman generator for Azure IoT Edge Node.js module",
   "files": [
     "app"
   ],
@@ -17,7 +17,12 @@
     "url": "https://github.com/Azure/generator-azure-iot-edge-module/issues"
   },
   "homepage": "https://github.com/Azure/generator-azure-iot-edge-module#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azure/generator-azure-iot-edge-module.git"
+  },
   "scripts": {
+    "lint": "eslint **/*.js",
     "test": "mocha"
   },
   "dependencies": {
@@ -25,6 +30,7 @@
     "yosay": "^2.0.2"
   },
   "devDependencies": {
+    "eslint": "^5.1.0",
     "mocha": "^5.2.0",
     "yeoman-assert": "^3.0.0",
     "yeoman-test": "^1.7.2"
