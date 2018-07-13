@@ -39,7 +39,7 @@ module.exports = class extends Generator {
           if (name.startsWith('_') || name.endsWith('_')) {
             return 'Module name must not start or end with the symbol _';
           }
-          if (name.match(/[^a-zA-Z0-9\_]/)) {
+          if (name.match(/[^a-zA-Z0-9_]/)) {
             return 'Module name must contain only alphanumeric characters or the symbol _';
           }
           return true;
@@ -76,7 +76,7 @@ module.exports = class extends Generator {
     this._copyStatic('Dockerfile.windows-amd64.debug');
 
     this._copyTemplate('module.json', { repository: this.repository });
-    this._copyTemplate('package.json', { name: this.name })
+    this._copyTemplate('package.json', { name: this.name });
   }
 
   _copyStatic(from, to = undefined) {
@@ -89,4 +89,4 @@ module.exports = class extends Generator {
   _copyTemplate(file, context) {
     this.fs.copyTpl(this.templatePath(file), path.join(this.destinationPath(this.name), file), context);
   }
-}
+};
