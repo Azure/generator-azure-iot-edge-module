@@ -1,6 +1,6 @@
 'use strict';
 
-var Transport = require('azure-iot-device-mqtt').Mqtt;
+var Transport = require('azure-iot-device-amqp').Amqp;
 var Client = require('azure-iot-device').ModuleClient;
 var Message = require('azure-iot-device').Message;
 
