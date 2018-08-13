@@ -59,7 +59,7 @@ module.exports = class extends Generator {
       }
     ]).then((answers) => {
       this.name = (this.options.name || answers.name).trim();
-      this.repository = (this.options.repository || answers.repository).trim().toLowerCase();
+      this.repository = (this.options.repository || answers.repository).trim();
     });
   }
 
