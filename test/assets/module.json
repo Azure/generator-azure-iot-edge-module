@@ -2,7 +2,7 @@
     "$schema-version": "0.0.1",
     "description": "",
     "image": {
-        "repository": "localhost:5555/testmodule",
+        "repository": "localhost:5555/TestModule",
         "tag": {
             "version": "0.0.1",
             "platforms": {
