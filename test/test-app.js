@@ -22,8 +22,6 @@ describe('generator-azure-iot-edge-module: app', function () {
           'TestModule/Dockerfile.amd64.debug',
           'TestModule/Dockerfile.arm32v7',
           'TestModule/Dockerfile.arm32v7.debug',
-          'TestModule/Dockerfile.windows-amd64',
-          'TestModule/Dockerfile.windows-amd64.debug',
           'TestModule/module.json',
           'TestModule/package.json'
         ]);
@@ -47,8 +45,6 @@ describe('generator-azure-iot-edge-module: app', function () {
           'TestModule/Dockerfile.amd64.debug',
           'TestModule/Dockerfile.arm32v7',
           'TestModule/Dockerfile.arm32v7.debug',
-          'TestModule/Dockerfile.windows-amd64',
-          'TestModule/Dockerfile.windows-amd64.debug',
           'TestModule/module.json',
           'TestModule/package.json'
         ]);
