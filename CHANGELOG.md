@@ -1,4 +1,7 @@
-# Change Log
+# Changelog
+
+[![npm](https://img.shields.io/npm/v/generator-azure-iot-edge-module.svg)](https://www.npmjs.com/package/generator-azure-iot-edge-module)
+
 ## 1.3.0 - 2018-12-03
 ### Changed
 * Add `EXPOSE` for debug Dockerfiles

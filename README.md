@@ -1,5 +1,7 @@
 # Azure IoT Edge Node.js Module Generator
 
+[![npm](https://img.shields.io/npm/v/generator-azure-iot-edge-module.svg)](https://www.npmjs.com/package/generator-azure-iot-edge-module)
+
 `generator-azure-iot-edge-module` creates a base template to start a new Azure IoT Edge Node.js module
 
 ## Install
