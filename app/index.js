@@ -74,7 +74,7 @@ module.exports = class extends Generator {
     this._copyStatic('Dockerfile.arm32v7.debug');
 
     this._copyTemplate('module.json', { repository: this.repository });
-    this._copyTemplate('package.json', { name: this.name });
+    this._copyTemplate('package.json', { name: this.name.toLowerCase() });
   }
 
   _copyStatic(from, to = undefined) {
