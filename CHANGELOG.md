@@ -2,6 +2,10 @@
 
 [![npm](https://img.shields.io/npm/v/generator-azure-iot-edge-module.svg)](https://www.npmjs.com/package/generator-azure-iot-edge-module)
 
+## 1.4.0 - 2019-03-28
+### Changed
+* Use lowercase letter for package name
+
 ## 1.3.0 - 2018-12-03
 ### Changed
 * Add `EXPOSE` for debug Dockerfiles
