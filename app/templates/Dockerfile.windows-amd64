@@ -1,0 +1,11 @@
+FROM stefanscherer/node-windows:10-nanoserver
+
+WORKDIR /app/
+
+COPY package*.json ./
+
+RUN npm install --production
+
+COPY app.js ./
+
+CMD ["node", "app.js"]
