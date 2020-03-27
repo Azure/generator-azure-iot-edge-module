@@ -1,4 +1,4 @@
-FROM arm32v7/node:10-slim
+FROM arm64v8/node:10-slim
 
 WORKDIR /app/
 
@@ -8,8 +8,6 @@ RUN npm install --production
 
 COPY app.js ./
 
-EXPOSE 9229
-
 USER node
 
-CMD ["node", "--inspect=0.0.0.0:9229", "app.js"]
+CMD ["node", "app.js"]
