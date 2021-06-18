@@ -2,6 +2,10 @@
 
 [![npm](https://img.shields.io/npm/v/generator-azure-iot-edge-module.svg)](https://www.npmjs.com/package/generator-azure-iot-edge-module)
 
+## 1.5.1 - 2021-06-18
+### Added
+* snap to latest client sdk
+
 ## 1.5.0 - 2020-03-27
 ### Added
 * Add support for arm64v8 platform
