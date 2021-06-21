@@ -2,7 +2,7 @@
     "name": "testmodule",
     "version": "0.0.1",
     "dependencies": {
-        "azure-iot-device": "^1.11.0",
-        "azure-iot-device-mqtt": "^1.11.0"
+        "azure-iot-device": "^1.17.4",
+        "azure-iot-device-mqtt": "^1.15.4"
     }
 }
