@@ -17,10 +17,17 @@ steps:
         npm install 
     displayName: 'npm install'
 
+  - script: |
+        npm run lint 
+    displayName: 'npm lint'
   - task: Npm@1
     inputs:
       command: 'custom'
       customCommand: 'build'
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      customCommand: 'test'
   - task: Npm@1
     inputs:
       command: 'custom'
