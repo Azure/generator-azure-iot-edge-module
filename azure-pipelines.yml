@@ -29,12 +29,11 @@ steps:
   - task: GitHubRelease@1
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
     inputs:
-      gitHubConnection: 'vikas0212git'
+      gitHubConnection: 'github.com_vikas0212git'
       repositoryName: '$(Build.Repository.Name)'
       action: 'create'
       target: '$(Build.SourceVersion)'
       tagSource: 'userSpecifiedTag'
       tag: '$(Build.SourceBranch)'
       releaseNotesSource: 'inline'
-      assets: 
       addChangeLog: false
