@@ -20,14 +20,20 @@ steps:
   - script: |
         npm run lint 
     displayName: 'npm lint'
-  - task: Npm@1
+  - task: Bash@3
+    displayName: "Packging"
     inputs:
-      command: 'custom'
-      customCommand: 'build'
-  - task: Npm@1
+      targetType: 'inline'
+      script: 'npm pack'
+  - task: PublishBuildArtifacts@1
     inputs:
-      command: 'custom'
-      customCommand: 'test'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
+#  - task: Npm@1
+#    inputs:
+#      command: 'custom'
+#      customCommand: 'build'
   - task: Npm@1
     inputs:
       command: 'custom'
