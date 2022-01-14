@@ -46,6 +46,7 @@ steps:
       publishLocation: 'Container'
 
   - task: Npm@1
+    displayName: "npm Test"
     inputs:
       command: 'custom'
       customCommand: 'test'
