@@ -23,11 +23,11 @@ steps:
         npm run lint 
     displayName: 'npm lint'
 
-  - task: Bash@3
-    displayName: "npm Packging"
+  - task: Npm@1
+    displayName: "npm Packaging"
     inputs:
-      targetType: 'inline'
-      script: 'npm pack'
+        command: 'custom'
+        customCommand: 'pack'
 
   - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
     displayName: 'SBOM Generation Task'
