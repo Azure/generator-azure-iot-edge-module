@@ -37,7 +37,7 @@ steps:
   - task: CopyFiles@2
     inputs:
       SourceFolder: '$(Build.SourcesDirectory)'
-      Contents: '*.gz'
+      Contents: '*.tgz'
       TargetFolder: '$(Build.ArtifactStagingDirectory)/Package'
   - task: PublishBuildArtifacts@1
     inputs:
