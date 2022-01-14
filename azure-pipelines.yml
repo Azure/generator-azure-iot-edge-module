@@ -34,9 +34,14 @@ steps:
     inputs:
       BuildDropPath: '$(Build.ArtifactStagingDirectory)'
 
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)'
+      Contents: '*.gz'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/Package'
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/Package'
       ArtifactName: 'drop'
       publishLocation: 'Container'
 
@@ -55,9 +60,12 @@ steps:
       tagSource: 'userSpecifiedTag'
       tag: '$(Build.SourceBranch)'
       releaseNotesSource: 'inline'
+      assets: '$(Build.ArtifactStagingDirectory)/Package/*'
       addChangeLog: false
 
   - task: Npm@1
+    displayName: "npm Publishing"
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
     inputs:
       command: 'publish'
       publishRegistry: 'useFeed'
