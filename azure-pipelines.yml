@@ -17,8 +17,11 @@ steps:
   - script: |
         npm install yo
         npm install 
-        npm lint
     displayName: 'npm install'
+    
+  - script: |
+        npm run lint 
+    displayName: 'npm lint'
 
   - task: Bash@3
     displayName: "npm Packging"
