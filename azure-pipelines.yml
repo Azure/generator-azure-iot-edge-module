@@ -30,10 +30,7 @@ steps:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'drop'
       publishLocation: 'Container'
-#  - task: Npm@1
-#    inputs:
-#      command: 'custom'
-#      customCommand: 'build'
+
   - task: Npm@1
     inputs:
       command: 'custom'
