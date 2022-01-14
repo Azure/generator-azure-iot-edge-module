@@ -15,14 +15,11 @@ steps:
   - script: |
         npm install yo
         npm install 
+        npm lint
     displayName: 'npm install'
 
-  - script: |
-        npm run lint 
-    displayName: 'npm lint'
-    
   - task: Bash@3
-    displayName: "Packging"
+    displayName: "npm Packging"
     inputs:
       targetType: 'inline'
       script: 'npm pack'
@@ -49,3 +46,9 @@ steps:
       tag: '$(Build.SourceBranch)'
       releaseNotesSource: 'inline'
       addChangeLog: false
+
+  - task: Npm@1
+    inputs:
+      command: 'publish'
+      publishRegistry: 'useFeed'
+      publishFeed: '"Service connection name"'      
