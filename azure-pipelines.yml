@@ -20,11 +20,13 @@ steps:
   - script: |
         npm run lint 
     displayName: 'npm lint'
+    
   - task: Bash@3
     displayName: "Packging"
     inputs:
       targetType: 'inline'
       script: 'npm pack'
+
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
