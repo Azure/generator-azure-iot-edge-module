@@ -72,10 +72,20 @@ steps:
       assets: '$(Build.ArtifactStagingDirectory)/Package/*'
       addChangeLog: false
 
-  - task: Npm@1
-    displayName: "npm Publishing"
+  - task: AzureFileCopy@4
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
     inputs:
-      command: 'publish'
-      publishRegistry: 'useFeed'
-      publishFeed: '"Service connection name"' 
+      SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
+      azureSubscription: 'azuresdkpartnerdrops'
+      Destination: 'AzureBlob'
+      storage: 'azuresdkpartnerdrops'
+      ContainerName: 'drops'
+      BlobPrefix: 'edge/npm/1.5.1'
+
+  # - task: Npm@1
+  #   displayName: "npm Publishing"
+  #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+  #   inputs:
+  #     command: 'publish'
+  #     publishRegistry: 'useFeed'
+  #     publishFeed: '"Service connection name"' 
