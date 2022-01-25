@@ -85,7 +85,7 @@ jobs:
 
 - job: UploadtoStorage
   dependsOn: Build
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+  # condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
   pool:
     name: Azure-IoT-EdgeExperience-1ES-Hosted-Windows
     demands:
