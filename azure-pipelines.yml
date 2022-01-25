@@ -85,7 +85,7 @@ steps:
   - task: AzureFileCopy@4
     inputs:
       SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
-      azureSubscription: 'Azure IoT DDE team subscription(377c3343-75bb-4244-98a3-0fb84a830c4b)'
+      azureSubscription: 'test'
       Destination: 'AzureBlob'
       storage: 'sadevicelabsetup'
       ContainerName: 'test'
