@@ -74,19 +74,9 @@ jobs:
         assets: '$(Build.ArtifactStagingDirectory)/Package/*'
         addChangeLog: false
 
-    # - task: AzureFileCopy@4
-    #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
-    #   inputs:
-    #     SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
-    #     azureSubscription: 'azuresdkpartnerdrops'
-    #     Destination: 'AzureBlob'
-    #     storage: 'azuresdkpartnerdrops'
-    #     ContainerName: 'drops'
-    #     BlobPrefix: 'edge/npm/1.5.1'
-
 - job: UploadtoStorage
   dependsOn: Build
-  # condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
   pool:
     vmImage: windows-latest 
     # name: Azure-IoT-EdgeExperience-1ES-Hosted-Windows
@@ -116,11 +106,11 @@ jobs:
         echo $PACKAGEVERSION
         
   - task: AzureFileCopy@3
-    # condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
     inputs:
       SourcePath: '$(System.DefaultWorkingDirectory)/artifacts/*'
       azureSubscription: 'test'
       Destination: 'AzureBlob'
       storage: 'sadevicelabsetup'
       ContainerName: 'test'
-      BlobPrefix: 'edge/npm/1.5.1'
+      BlobPrefix: 'edge/npm/$PACKAGEVERSION'
