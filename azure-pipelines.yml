@@ -114,7 +114,8 @@ jobs:
         VERSION=$(node -p -e "require('./package.json').version")
         echo "##vso[task.setvariable variable=PACKAGEVERSION;]$VERSION"
         echo $PACKAGEVERSION
-  - task: AzureFileCopy@4
+        
+  - task: AzureFileCopy@3
     # condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
     inputs:
       SourcePath: '$(System.DefaultWorkingDirectory)/artifacts/*'
