@@ -72,20 +72,21 @@ steps:
       assets: '$(Build.ArtifactStagingDirectory)/Package/*'
       addChangeLog: false
 
-  - task: AzureFileCopy@4
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
-    inputs:
-      SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
-      azureSubscription: 'azuresdkpartnerdrops'
-      Destination: 'AzureBlob'
-      storage: 'azuresdkpartnerdrops'
-      ContainerName: 'drops'
-      BlobPrefix: 'edge/npm/1.5.1'
-
-  # - task: Npm@1
-  #   displayName: "npm Publishing"
+  # - task: AzureFileCopy@4
   #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
   #   inputs:
-  #     command: 'publish'
-  #     publishRegistry: 'useFeed'
-  #     publishFeed: '"Service connection name"' 
+  #     SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
+  #     azureSubscription: 'azuresdkpartnerdrops'
+  #     Destination: 'AzureBlob'
+  #     storage: 'azuresdkpartnerdrops'
+  #     ContainerName: 'drops'
+  #     BlobPrefix: 'edge/npm/1.5.1'
+
+  - task: AzureFileCopy@4
+    inputs:
+      SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
+      azureSubscription: 'Azure IoT DDE team subscription(377c3343-75bb-4244-98a3-0fb84a830c4b)'
+      Destination: 'AzureBlob'
+      storage: 'sadevicelabsetup'
+      ContainerName: 'test'
+      BlobPrefix: 'edge/npm/1.5.1'
