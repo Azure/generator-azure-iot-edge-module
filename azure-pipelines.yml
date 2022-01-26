@@ -53,16 +53,8 @@ jobs:
         command: 'custom'
         customCommand: 'test'
 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          if [[ $(Build.SourceBranch) =~ ^refs/tags/v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-          echo "##vso[task.setvariable variable=NPM_PUBLISH_FLAG;]true"
-          fi
-
     - task: GitHubRelease@1
-      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
       inputs:
         gitHubConnection: 'github.com_marianan'
         repositoryName: '$(Build.Repository.Name)'
@@ -72,6 +64,7 @@ jobs:
         tag: '$(Build.SourceBranch)'
         releaseNotesSource: 'inline'
         assets: '$(Build.ArtifactStagingDirectory)/Package/*'
+        isPreRelease: true
         addChangeLog: false
 
 - job: UploadToStorage
@@ -104,27 +97,12 @@ jobs:
         VERSION=$(node -p -e "require('./package.json').version")
         echo "##vso[task.setvariable variable=PACKAGEVERSION;]$VERSION"
 
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: echo $(PACKAGEVERSION)
- 
-  # - task: AzureFileCopy@3
-  #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
-  #   inputs:
-  #     SourcePath: '$(System.DefaultWorkingDirectory)/artifacts/*'
-  #     azureSubscription: 'azuresdkpartnerdrops'
-  #     Destination: 'AzureBlob'
-  #     storage: 'azuresdkpartnerdrops'
-  #     ContainerName: 'drops'
-  #     BlobPrefix: 'azureiotedge/npm/$(PACKAGEVERSION)'
-
   - task: AzureFileCopy@3
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
     inputs:
-      SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
-      azureSubscription: 'test'
+      SourcePath: '$(System.DefaultWorkingDirectory)/artifacts/*'
+      azureSubscription: 'azuresdkpartnerdrops'
       Destination: 'AzureBlob'
-      storage: 'sadevicelabsetup'
-      ContainerName: 'test'
+      storage: 'azuresdkpartnerdrops'
+      ContainerName: 'drops'
       BlobPrefix: 'azureiotedge/npm/$(PACKAGEVERSION)'
