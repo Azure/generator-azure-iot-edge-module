@@ -62,7 +62,7 @@ jobs:
           fi
 
     - task: GitHubRelease@1
-      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
       inputs:
         gitHubConnection: 'github.com_marianan'
         repositoryName: '$(Build.Repository.Name)'
@@ -120,7 +120,7 @@ jobs:
   #     BlobPrefix: 'azureiotedge/npm/$(PACKAGEVERSION)'
 
   - task: AzureFileCopy@3
-#    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
     inputs:
       SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
       azureSubscription: 'test'
