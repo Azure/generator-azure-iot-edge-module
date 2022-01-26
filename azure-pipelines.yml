@@ -74,7 +74,7 @@ jobs:
         assets: '$(Build.ArtifactStagingDirectory)/Package/*'
         addChangeLog: false
 
-- job: UploadtoStorage
+- job: UploadToStorage
   dependsOn: Build
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
   pool:
@@ -95,7 +95,7 @@ jobs:
     inputs:
       buildType: 'current'
       artifactName: 'drop'
-      targetPath: '$(System.DefaultWorkingDirectory)/artifacts'
+      targetPath: '$(Build.ArtifactStagingDirectory)/Package'
 
   - task: Bash@3
     inputs:
@@ -109,12 +109,22 @@ jobs:
       targetType: 'inline'
       script: echo $(PACKAGEVERSION)
  
+  # - task: AzureFileCopy@3
+  #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+  #   inputs:
+  #     SourcePath: '$(System.DefaultWorkingDirectory)/artifacts/*'
+  #     azureSubscription: 'azuresdkpartnerdrops'
+  #     Destination: 'AzureBlob'
+  #     storage: 'azuresdkpartnerdrops'
+  #     ContainerName: 'drops'
+  #     BlobPrefix: 'azureiotedge/npm/$(PACKAGEVERSION)'
+
   - task: AzureFileCopy@3
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+#    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
     inputs:
-      SourcePath: '$(System.DefaultWorkingDirectory)/artifacts/*'
-      azureSubscription: 'azuresdkpartnerdrops'
+      SourcePath: '$(Build.ArtifactStagingDirectory)/Package/*'
+      azureSubscription: 'test'
       Destination: 'AzureBlob'
-      storage: 'azuresdkpartnerdrops'
-      ContainerName: 'drops'
-      BlobPrefix: 'edge/npm/$(PACKAGEVERSION)'
+      storage: 'sadevicelabsetup'
+      ContainerName: 'test'
+      BlobPrefix: 'azureiotedge/npm/$(PACKAGEVERSION)'
