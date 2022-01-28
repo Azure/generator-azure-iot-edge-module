@@ -94,10 +94,11 @@ jobs:
     - task: AzureKeyVault@2
       displayName: 'Azure Key Vault: azure-iot-edgetools-kv'
       inputs:
-        azureSubscription: 'Azure IoT DDE team subscription (377c3343-75bb-4244-98a3-0fb84a830c4b)'
+        azureSubscription: 'test'
         KeyVaultName: 'azure-iot-edgetools-kv'
+        SecretsFilter: '*'
         RunAsPreJob: true
-
+        
     - task: Bash@3
       inputs:
         targetType: 'inline'
@@ -110,7 +111,13 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          azcopy /Source:$(Build.ArtifactStagingDirectory)/Package/* /Dest:https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION) /DestKey:$(azuresdkpartnerdrops-access-key) /S
+          azcopy /Source:$(Build.ArtifactStagingDirectory)/Package/* /Dest:https://sadevicelabsetup.blob.core.windows.net/test/azureiotedge/npm/$(PACKAGEVERSION) /DestKey:$(testaccess-key) /S
+
+    # - task: Bash@3
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #       azcopy /Source:$(Build.ArtifactStagingDirectory)/Package/* /Dest:https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION) /DestKey:$(azuresdkpartnerdrops-access-key) /S
 
     # - task: AzureFileCopy@3
     #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
