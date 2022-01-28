@@ -70,39 +70,54 @@ jobs:
 - job: UploadToStorage
   dependsOn: Build
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
-  pool:
-    name: Azure-IoT-EdgeExperience-1ES-Hosted-Windows
-    demands:
-      - ImageOverride -equals MMS2022TLS
+#   pool:
+#     name: Azure-IoT-EdgeExperience-1ES-Hosted-Windows
+#     demands:
+#       - ImageOverride -equals MMS2022TLS
   
   steps:
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        if [[ $(Build.SourceBranch) =~ ^refs/tags/v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        echo "##vso[task.setvariable variable=NPM_PUBLISH_FLAG;]true"
-        fi
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          if [[ $(Build.SourceBranch) =~ ^refs/tags/v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "##vso[task.setvariable variable=NPM_PUBLISH_FLAG;]true"
+          fi
 
-  - task: DownloadPipelineArtifact@2
-    inputs:
-      buildType: 'current'
-      artifactName: 'drop'
-      targetPath: '$(Build.ArtifactStagingDirectory)/Package'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          VERSION=$(node -p -e "require('./package.json').version")
+          echo "##vso[task.setvariable variable=PACKAGEVERSION;]$VERSION"
 
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        VERSION=$(node -p -e "require('./package.json').version")
-        echo "##vso[task.setvariable variable=PACKAGEVERSION;]$VERSION"
+    - task: AzureKeyVault@2
+      displayName: 'Azure Key Vault: azure-iot-edgetools-kv'
+      inputs:
+        azureSubscription: 'Azure IoT DDE team subscription (377c3343-75bb-4244-98a3-0fb84a830c4b)'
+        KeyVaultName: 'azure-iot-edgetools-kv'
+        RunAsPreJob: true
 
-  - task: AzureFileCopy@3
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
-    inputs:
-      SourcePath: '$(System.DefaultWorkingDirectory)/artifacts/*'
-      azureSubscription: 'azuresdkpartnerdrops'
-      Destination: 'AzureBlob'
-      storage: 'azuresdkpartnerdrops'
-      ContainerName: 'drops'
-      BlobPrefix: 'azureiotedge/npm/$(PACKAGEVERSION)'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          wget https://aka.ms/downloadazcopy-v10-linux
+          tar -xvf downloadazcopy-v10-linux
+          sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          azcopy /Source:$(Build.ArtifactStagingDirectory)/Package/* /Dest:https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION) /DestKey:$(azuresdkpartnerdrops-access-key) /S
+
+    # - task: AzureFileCopy@3
+    #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+    #   inputs:
+    #     SourcePath: '$(System.DefaultWorkingDirectory)/artifacts/*'
+    #     azureSubscription: 'azuresdkpartnerdrops'
+    #     Destination: 'AzureBlob'
+    #     storage: 'azuresdkpartnerdrops'
+    #     ContainerName: 'drops'
+    #     BlobPrefix: 'azureiotedge/npm/$(PACKAGEVERSION)'
