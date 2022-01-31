@@ -111,7 +111,7 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-           sudo azcopy /$(Build.ArtifactStagingDirectory)/Package/* /https://sadevicelabsetup.blob.core.windows.net/test/azureiotedge/npm/$(PACKAGEVERSION) /$(testaccess-key) /S
+           sudo azcopy cp /$(Build.ArtifactStagingDirectory)/Package/* /https://sadevicelabsetup.blob.core.windows.net/test/azureiotedge/npm/$(PACKAGEVERSION) /$(testaccess-key) /S
 
     # - task: Bash@3
     #   inputs:
