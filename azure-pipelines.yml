@@ -111,7 +111,9 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-           sudo azcopy cp /$(Build.ArtifactStagingDirectory)/Package/* /https://sadevicelabsetup.blob.core.windows.net/test/azureiotedge/npm/$(PACKAGEVERSION) /$(testaccess-key) /S
+          set AZCOPY_SPA_CLIENT_SECRET=<azuresdkpartnerdrops-service-principal-key>
+          azcopy login --test --application-id $(APPID)
+          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*" "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)"
 
     # - task: Bash@3
     #   inputs:
