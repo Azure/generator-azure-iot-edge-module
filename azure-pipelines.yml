@@ -67,15 +67,6 @@ jobs:
         isPreRelease: true
         addChangeLog: false
 
-- job: UploadToStorage
-  dependsOn: Build
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
-#   pool:
-#     name: Azure-IoT-EdgeExperience-1ES-Hosted-Windows
-#     demands:
-#       - ImageOverride -equals MMS2022TLS
-  
-  steps:
     - task: Bash@3
       inputs:
         targetType: 'inline'
