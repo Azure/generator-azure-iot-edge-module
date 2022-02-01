@@ -34,7 +34,7 @@ jobs:
     - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
       displayName: 'SBOM Generation Task'
       inputs:
-        BuildDropPath: '$(Build.ArtifactStagingDirectory)/Package'
+        BuildDropPath: '$(Build.ArtifactStagingDirectory)'
 
     - task: CopyFiles@2
       inputs:
@@ -44,7 +44,7 @@ jobs:
 
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/Package'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
 
