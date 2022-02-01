@@ -92,6 +92,7 @@ jobs:
           sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
 
     - task: Bash@3
+      displayName: 'Uplaod to Blob'
       condition: and(succeeded(), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
       inputs:
         targetType: 'inline'
