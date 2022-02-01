@@ -111,9 +111,8 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          set AZCOPY_SPA_CLIENT_SECRET=$(TESTKEY)
-          azcopy login --test --application-id $(APPID)
-          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*" "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)"
+          az login --service-principal --username $(APP_ID) --tenant $(TENANT_ID) --password $(SECRET)
+          az storage blob upload --name "azureiotedge/npm/$(PACKAGEVERSION)/generator-azure-iot-edge-module-$(PACKAGEVERSION).tgz" --file "$(Build.ArtifactStagingDirectory)/Package/generator-azure-iot-edge-module-$(PACKAGEVERSION).tgz" --container-name test --account-name sadevicelabsetup --auth-mode login
 
     # - task: Bash@3
     #   inputs:
