@@ -41,6 +41,7 @@ jobs:
         SourceFolder: '$(Build.SourcesDirectory)'
         Contents: '*.tgz'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/Package'
+
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/Package'
@@ -99,12 +100,13 @@ jobs:
           sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
 
     - task: Bash@3
+      condition: and(succeeded(), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
       inputs:
         targetType: 'inline'
         script: |
           export AZCOPY_SPA_CLIENT_SECRET=$(test-client-secret)
           azcopy login --service-principal --application-id $(test-app-id)
-          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*"  "https://sadevicelabsetup.blob.core.windows.net/test/azureiotedge/npm/1.2.3"
+          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*"  "https://sadevicelabsetup.blob.core.windows.net/test/azureiotedge/npm/$(PACKAGEVERSION)"
           
     # - task: Bash@3
     #   inputs:
