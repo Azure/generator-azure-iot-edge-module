@@ -108,5 +108,6 @@ jobs:
         targetType: 'inline'
         script: |
           export AZCOPY_SPA_CLIENT_SECRET=$(TEST-CLIENT-SECRET)
+          ls -ltr $(Build.ArtifactStagingDirectory)/Package
           azcopy login --service-principal --application-id $(TEST_APPID)
-          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/generator-azure-iot-edge-module-$(PACKAGEVERSION).tgz"  "https://sadevicelabsetup.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)"
+          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*" "https://sadevicelabsetup.blob.core.windows.net/test/azureiotedge/npm/$(PACKAGEVERSION)"
