@@ -101,6 +101,7 @@ jobs:
     #       azcopy login --service-principal --application-id $(APPID)
     #       azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*"  "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)"
 
+
     - task: Bash@3
       displayName: 'Uplaod to Blob'
       inputs:
@@ -108,4 +109,4 @@ jobs:
         script: |
           export AZCOPY_SPA_CLIENT_SECRET=$(TEST-CLIENT-SECRET)
           azcopy login --service-principal --application-id $(TEST_APPID)
-          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*"  "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)"
+          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*"  "https://sadevicelabsetup.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)"
