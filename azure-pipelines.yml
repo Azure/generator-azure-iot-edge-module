@@ -36,11 +36,11 @@ jobs:
       inputs:
         BuildDropPath: '$(Build.ArtifactStagingDirectory)'
 
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(Build.SourcesDirectory)'
-        Contents: '*.tgz'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/Package'
+    # - task: CopyFiles@2
+    #   inputs:
+    #     SourceFolder: '$(Build.SourcesDirectory)'
+    #     Contents: '*.tgz'
+    #     TargetFolder: '$(Build.ArtifactStagingDirectory)/Package'
 
     - task: PublishBuildArtifacts@1
       inputs:
@@ -64,7 +64,7 @@ jobs:
         tagSource: 'userSpecifiedTag'
         tag: '$(Build.SourceBranch)'
         releaseNotesSource: 'inline'
-        assets: '$(Build.ArtifactStagingDirectory)/Package/*'
+        assets: '$(Build.ArtifactStagingDirectory)/generator-azure-iot-edge-module-$(PACKAGEVERSION).tgz'
         isPreRelease: true
         addChangeLog: false
 
@@ -93,12 +93,21 @@ jobs:
           tar -xvf downloadazcopy-v10-linux
           sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
 
+    # - task: Bash@3
+    #   displayName: 'Uplaod to Blob'
+    #   condition: and(succeeded(), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #       export AZCOPY_SPA_CLIENT_SECRET=$(AZURESDKPARTNERDROPS-SERVICE-PRINCIPAL-KEY)
+    #       azcopy login --service-principal --application-id $(APPID)
+    #       azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*"  "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)"
+
     - task: Bash@3
       displayName: 'Uplaod to Blob'
-      condition: and(succeeded(), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
       inputs:
         targetType: 'inline'
         script: |
-          export AZCOPY_SPA_CLIENT_SECRET=$(AZURESDKPARTNERDROPS-SERVICE-PRINCIPAL-KEY)
-          azcopy login --service-principal --application-id $(APPID)
-          azcopy copy "$(Build.ArtifactStagingDirectory)/Package/*"  "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)"
+          export AZCOPY_SPA_CLIENT_SECRET=$(TEST-CLIENT-SECRET)
+          azcopy login --service-principal --application-id $(TEST_APPID)
+          azcopy copy "$(Build.ArtifactStagingDirectory)/generator-azure-iot-edge-module-$(PACKAGEVERSION).tgz" "https://sadevicelabsetup.blob.core.windows.net/test/azureiotedge/npm/$(PACKAGEVERSION)"
