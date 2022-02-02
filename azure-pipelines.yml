@@ -3,14 +3,12 @@ trigger:
     include:
     - refs/tags/v*
     
-jobs:
-- job: Build
-  pool:
+pool:
     name: Azure-IoT-EdgeExperience-1ES-Hosted-Linux
     demands:
       - ImageOverride -equals MMSUbuntu18.04TLS
 
-  steps:
+steps:
     - task: NodeTool@0
       inputs:
         versionSpec: '14.x'
