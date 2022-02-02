@@ -29,6 +29,12 @@ steps:
           command: 'custom'
           customCommand: 'pack'
 
+    - task: Npm@1
+      displayName: "npm Test"
+      inputs:
+        command: 'custom'
+        customCommand: 'test'
+
     - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
       displayName: 'SBOM Generation Task'
       inputs:
@@ -55,12 +61,6 @@ steps:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-
-    - task: Npm@1
-      displayName: "npm Test"
-      inputs:
-        command: 'custom'
-        customCommand: 'test'
 
     - task: GitHubRelease@1
       condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
