@@ -36,11 +36,6 @@ jobs:
       inputs:
         BuildDropPath: '$(Build.ArtifactStagingDirectory)'
 
-    # - task: CopyFiles@2
-    #   inputs:
-    #     SourceFolder: '$(Build.SourcesDirectory)'
-    #     Contents: '*.tgz'
-    #     TargetFolder: '$(Build.ArtifactStagingDirectory)/Package'
     - task: Bash@3
       inputs:
         targetType: 'inline'
