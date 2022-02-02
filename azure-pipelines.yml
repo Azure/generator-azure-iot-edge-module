@@ -63,7 +63,7 @@ jobs:
         customCommand: 'test'
 
     - task: GitHubRelease@1
-      # condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
       inputs:
         gitHubConnection: 'github.com_marianan'
         repositoryName: '$(Build.Repository.Name)'
