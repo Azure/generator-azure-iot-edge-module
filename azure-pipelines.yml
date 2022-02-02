@@ -2,72 +2,95 @@ trigger:
   branches:
     include:
     - refs/tags/v*
-
+    
 pool:
-  name: Azure-IoT-EdgeExperience-1ES-Hosted-Linux
-  demands:
-    - ImageOverride -equals MMSUbuntu18.04TLS
+    name: Azure-IoT-EdgeExperience-1ES-Hosted-Linux
+    demands:
+      - ImageOverride -equals MMSUbuntu18.04TLS
 
 steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '14.x'
-      checkLatest: true
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '14.x'
+        checkLatest: true
 
-  - script: |
-        npm install yo
-        npm install 
-    displayName: 'npm install'
-    
-  - script: |
-        npm run lint 
-    displayName: 'npm lint'
+    - script: |
+          npm install yo
+          npm install 
+      displayName: 'npm install'
+      
+    - script: |
+          npm run lint 
+      displayName: 'npm lint'
 
-  - task: Npm@1
-    displayName: "npm Packaging"
-    inputs:
+    - task: Npm@1
+      displayName: "npm Packaging"
+      inputs:
+          command: 'custom'
+          customCommand: 'pack'
+
+    - task: Npm@1
+      displayName: "npm Test"
+      inputs:
         command: 'custom'
-        customCommand: 'pack'
+        customCommand: 'test'
 
-  - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
-    displayName: 'SBOM Generation Task'
-    inputs:
-      BuildDropPath: '$(Build.ArtifactStagingDirectory)'
+    - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+      displayName: 'SBOM Generation Task'
+      inputs:
+        BuildDropPath: '$(Build.ArtifactStagingDirectory)'
 
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '$(Build.SourcesDirectory)'
-      Contents: '*.tgz'
-      TargetFolder: '$(Build.ArtifactStagingDirectory)/Package'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/Package'
-      ArtifactName: 'drop'
-      publishLocation: 'Container'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          if [[ $(Build.SourceBranch) =~ ^refs/tags/v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "##vso[task.setvariable variable=NPM_PUBLISH_FLAG;]true"
+          fi
 
-  - task: Npm@1
-    displayName: "npm Test"
-    inputs:
-      command: 'custom'
-      customCommand: 'test'
-    
-  - task: GitHubRelease@1
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
-    inputs:
-      gitHubConnection: 'github.com_marianan'
-      repositoryName: '$(Build.Repository.Name)'
-      action: 'create'
-      target: '$(Build.SourceVersion)'
-      tagSource: 'userSpecifiedTag'
-      tag: '$(Build.SourceBranch)'
-      releaseNotesSource: 'inline'
-      assets: '$(Build.ArtifactStagingDirectory)/Package/*'
-      addChangeLog: false
+    - task: Bash@3
+      condition: and(succeeded(), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+      inputs:
+        targetType: 'inline'
+        script: |
+          VERSION=$(node -p -e "require('./package.json').version")
+          echo "##vso[task.setvariable variable=PACKAGEVERSION;]$VERSION"
 
-  - task: Npm@1
-    displayName: "npm Publishing"
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
-    inputs:
-      command: 'publish'
-      publishRegistry: 'useFeed'
-      publishFeed: '"Service connection name"'      
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+
+    - task: GitHubRelease@1
+      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+      inputs:
+        gitHubConnection: 'github.com_marianan'
+        repositoryName: '$(Build.Repository.Name)'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'userSpecifiedTag'
+        tag: '$(Build.SourceBranch)'
+        releaseNotesSource: 'inline'
+        assets: '$(Build.SourcesDirectory)/generator-azure-iot-edge-module-$(PACKAGEVERSION).tgz'
+        isPreRelease: true
+        addChangeLog: false
+
+    - task: Bash@3
+      condition: and(succeeded(), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+      inputs:
+        targetType: 'inline'
+        script: |
+          wget https://aka.ms/downloadazcopy-v10-linux
+          tar -xvf downloadazcopy-v10-linux
+          sudo cp ./azcopy_linux_amd64_*/azcopy /usr/bin/
+
+    - task: Bash@3
+      displayName: 'Uplaod to Blob'
+      condition: and(succeeded(), eq(variables['NPM_PUBLISH_FLAG'], 'true'))
+      inputs:
+        targetType: 'inline'
+        script: |
+          export AZCOPY_SPA_CLIENT_SECRET=$(AZURESDKPARTNERDROPS-SERVICE-PRINCIPAL-KEY)
+          azcopy login --service-principal --application-id $(APPID)
+          azcopy copy "$(Build.SourcesDirectory)/generator-azure-iot-edge-module-$(PACKAGEVERSION).tgz"  "https://azuresdkpartnerdrops.blob.core.windows.net/drops/azureiotedge/npm/$(PACKAGEVERSION)/generator-azure-iot-edge-module-$(PACKAGEVERSION).tgz"
